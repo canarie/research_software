@@ -228,9 +228,9 @@ def get_info():
         s = Info.objects.latest('pk')
     except ObjectDoesNotExist:
         s = Info(name="Reference Service", 
-                 synopsis="Initial Reference Service for the NEP RPI API", 
-                 version="0.1", 
-                 institution="Canarie", 
+                 synopsis="The initial Reference Service implementation of the NEP-RPI API", 
+                 version="1.0", 
+                 institution="CANARIE", 
                  release_time=now())
         s.save()
     return s
