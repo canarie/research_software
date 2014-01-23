@@ -70,6 +70,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'canarie_api',
     'rest_framework',
+    'django_nose',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -147,3 +148,5 @@ LOGGING = {
         },
     }
 }
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
