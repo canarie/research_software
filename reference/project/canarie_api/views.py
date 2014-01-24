@@ -102,13 +102,13 @@ def doc(request) :
     """ Return a HTML representation of the current documentation 
     
     """
-    return render(request, template+'doc.html') 
+    return HttpResponseRedirect('https://github.com/canarie/research_software/blob/master/reference/ReferenceServiceDesignNote.docx')
 
 def release_notes(request):
     """ Return a HTML representation of the current releasenotes 
     
     """
-    return render(request, template+'releasenotes.html') 
+    return HttpResponseRedirect('https://github.com/canarie/research_software/blob/master/reference/release_notes.md')
 
 def support(request): 
     """ Return a HTML representation of the current support 
@@ -120,7 +120,7 @@ def source(request):
     """ Return a HTML representation of the current source 
     
     """
-    return HttpResponse(status=204)
+    return HttpResponseRedirect('https://github.com/canarie/research_software/tree/master/reference')
 
 def tryme(request): 
     """ Redirect to the application 
