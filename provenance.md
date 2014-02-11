@@ -1,9 +1,9 @@
 # Components and Licensing
 
 The CANARIE reference service is written in Python and contains the following components:
-Version 2.7 of the Python runtime environment and standard libraries. Licence: http://docs.python.org/2/license.html
-Version 1.4.3 of the Django web framework. Licence: https://github.com/django/django/blob/master/LICENSE
-Custom Software developed at CANARIE. Licence: https://github.com/canarie/research_software/blob/master/licence.md  
+  * Version 2.7 of the Python runtime environment and standard libraries. Licence: http://docs.python.org/2/license.html
+  * Version 1.4.3 of the Django web framework. Licence: https://github.com/django/django/blob/master/LICENSE
+  * Custom Software developed at CANARIE. Licence: https://github.com/canarie/research_software/blob/master/licence.md  
 
 ## Versioning
 
