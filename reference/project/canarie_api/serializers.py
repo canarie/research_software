@@ -39,6 +39,8 @@ from canarie_api.models import Info, Statistic
 import logging
 log = logging.getLogger(__name__)
 
+VALUE = 'usagename'
+
 class IntAsTextField(serializers.WritableField):
     """ Saves an Int value as a writeable field.
     
@@ -56,21 +58,57 @@ class InfoSerializer(serializers.ModelSerializer):
     """
     releaseTime = serializers.DateTimeField(source='release_time', 
                                             format='%Y-%m-%dT%H:%M:%SZ')
+    supportEmail = serializers.EmailField(source='support_email')
+    researchSubject = serializers.EmailField(source='research_subject')
+    tags = serializers.SerializerMethodField('as_array')
+    
     class Meta:
         model = Info
-        fields = ('name', 'synopsis', 'version', 'institution', 'releaseTime')
+        fields = ('name', 'synopsis', 'version', 'institution', 'releaseTime',
+                    'supportEmail', 'category', 'researchSubject', 'tags')
+        
+    def as_array(self, obj):
+        return obj.tags.split()
       
 class StatSerializer(serializers.ModelSerializer): 
     """ Helper class to serialize a generic Statistic to a Canarie Research 
         Middleware API Stat response.     
     
     """
-    invocations = IntAsTextField(source='value')
+    usagename = IntAsTextField(source='value')
     lastReset = serializers.DateTimeField(source='last_reset', 
                                           read_only=True, 
                                           format='%Y-%m-%dT%H:%M:%SZ')
     class Meta:
         model = Statistic
-        fields = ('invocations', 'lastReset')
+        fields = (VALUE, 'lastReset')
+    
+
+def convert(stat):
+    """ Utility method to convert a Stat into the correct format for  converting 
+        to a JSON response.  
+    """
+    serializer = StatSerializer(stat)
+    return swap_usage_name(serializer.data, stat.name)
+    
+
+def swap_usage_name(data, name):
+    """ Utility method to swap out the serialized usage to the correct statistic
+        name. This is needed due to the serilaizers not being able to 
+        dynamically set the name of an attribute. So the data is post processed 
+        to change the name of to the correct value for the response.
+    """
+    data[name] = data[VALUE]
+    del data[VALUE]
+    return data
+
+
+    
+
+        
+    
+    
+    
+        
 
 

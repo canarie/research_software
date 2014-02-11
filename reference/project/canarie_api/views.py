@@ -46,6 +46,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadReque
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import utc, now
+from django.db import IntegrityError, transaction
 
 
 from rest_framework.decorators import api_view
@@ -55,12 +56,15 @@ from rest_framework.response import Response
 from canarie_api.models import Info
 from canarie_api.models import Statistic
 from canarie_api.serializers import InfoSerializer, StatSerializer
+from canarie_api.serializers import convert
+
+from canarie_api.defaults import info as info_defaults
+from canarie_api.defaults import stats as stats_defaults
 
 log = logging.getLogger(__name__)
 
 template = 'canarie_api/'
 
-INVOCATIONS = 'invocations'
 JSON_CONTENT = 'application/json'
 
 name = 'name'
@@ -94,8 +98,7 @@ def stats(request) :
     """
     s = get_invocations()
     if request.META['HTTP_ACCEPT'] == JSON_CONTENT:
-        serializer = StatSerializer(s)
-        return Response(data=serializer.data, content_type=JSON_CONTENT)
+        return Response(data=convert(s), content_type=JSON_CONTENT)
     return render(request, template+'stats.html', {'stats':s})  
 
 def doc(request) :
@@ -127,6 +130,18 @@ def tryme(request):
     
     """
     return HttpResponseRedirect(reverse('canarie:app'))
+    
+def licence(request):
+    """ Return a HTML representation of the current releasenotes 
+    
+    """
+    return HttpResponseRedirect('https://github.com/canarie/research_software/blob/master/licence.md')
+    
+def provenance(request):
+    """ Return a HTML representation of the current releasenotes 
+    
+    """
+    return HttpResponseRedirect('https://github.com/canarie/research_software/blob/master/provenance.md')
 
 
 # Reference Application views and methods
@@ -165,6 +180,7 @@ def reset(request):
     return Response(
         data=reset_counter(get_invocations()), content_type=JSON_CONTENT)
 
+@transaction.atomic
 def increment_counter(invocations):
     """ Increment the invocations statistic. 
     
@@ -175,6 +191,7 @@ def increment_counter(invocations):
     serializer = StatSerializer(invocations) 
     return serializer.data   
 
+@transaction.atomic
 def reset_counter(invocations):
     """ Reset the invocations statistic. 
     
@@ -205,21 +222,23 @@ def setinfo(request):
   
 
 # Utility methods
-
+@transaction.atomic
 def get_invocations():
     """ Get the invocations statistic from the db or seed with a new one if 
         not there.
     
     """
     try:
-        s = Statistic.objects.get(name=INVOCATIONS)
+        s = Statistic.objects.get(name=stats_defaults['name'])
         log.debug('Got {0}'.format(str(s)))
     except ObjectDoesNotExist:
-        s = Statistic(name=INVOCATIONS, value='0', last_reset=now())
-        s.save()
+        s = Statistic(name=stats_defaults['name'], 
+                      value=stats_defaults['value'], 
+                      last_reset=now())
         log.debug('Created {0}'.format(str(s)))
     return s
-    
+
+@transaction.atomic
 def get_info():
     """ Get the Info object from the db or seed with a new one if not there.
     
@@ -227,11 +246,15 @@ def get_info():
     try: 
         s = Info.objects.latest('pk')
     except ObjectDoesNotExist:
-        s = Info(name="Reference Service", 
-                 synopsis="The initial Reference Service implementation of the NEP-RPI API", 
-                 version="1.0", 
-                 institution="CANARIE", 
-                 release_time=now())
+        s = Info(name=info_defaults['name'], 
+                 synopsis=info_defaults['synopsis'], 
+                 version=info_defaults['version'], 
+                 institution=info_defaults['institution'], 
+                 release_time=info_defaults['release_time'],
+                 support_email=info_defaults['support_email'],
+                 category=info_defaults['category'],
+                 research_subject=info_defaults['research_subject'],
+                 tags=info_defaults['tags'])
         s.save()
     return s
     
@@ -252,6 +275,10 @@ def parse_info_json(data):
     write_field(info, 'synopsis', data)
     write_field(info, 'version', data)
     write_field(info, 'institution', data)
+    write_field(info, 'support_email', data)
+    write_field(info, 'category', data)
+    write_field(info, 'research_subject', data)
+    write_field(info, 'tags', data)
     if 'releaseTime' in data and data.get('releaseTime'):
         info.release_time = datetime.strptime(
                                 data.get('releaseTime'),

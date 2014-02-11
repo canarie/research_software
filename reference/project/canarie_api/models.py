@@ -39,14 +39,19 @@ class Info(models.Model):
         Defines the Info table in the database to store the data required by the 
         Canarie Research Middleware API.
     '''
-    name = models.CharField(max_length=100,blank=False)
+    name = models.CharField(max_length=254,blank=False)
     synopsis = models.TextField(blank=False)
     version = models.CharField(max_length=100,blank=False)
     institution = models.CharField(max_length=100,blank=False)
     release_time = models.DateTimeField(blank=False)
+    support_email = models.EmailField(max_length=254, blank=False)
+    category = models.CharField(max_length=254,blank=False)
+    research_subject = models.CharField(max_length=254,blank=False)
+    tags = models.TextField(blank=False)
   
     def __str__(self):
-        return "name:{0},synopsis:{1},version:{2},institution:{3},release_time:{4}".format(self.name, self.synopsis, self.version, self.institution, self.release_time)
+        return "name:{0},synopsis:{1},version:{2},institution:{3},release_time:{4},support_email{5},category{6},research_subject{7}, tags{8}".format(
+            self.name,self.synopsis, self.version, self.institution, self.release_time, self.support_email, self.category, self.research_subject, self.tags)
 
 class Statistic(models.Model):
     '''

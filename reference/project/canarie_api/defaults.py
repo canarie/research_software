@@ -1,7 +1,7 @@
 """
 Copyright 2013 - CANARIE Inc. All rights reserved
 
-Synopsis: Site URL configuration and routing
+Synopsis: Contains the default values for a new Info 
 
 Blob Hash: $Id$
 
@@ -31,25 +31,21 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
+from django.utils.timezone import now
 
-from django.conf.urls import patterns, url
+""" Defualt values for a new Info entry to the database if one if not already present
+"""
+info = {'name':'Reference Service',
+        'synopsis':'The Reference Service implementation of the NEP-RPI API revision 6',
+        'version':'2.0',
+        'institution':'CANARIE',
+        'release_time':now(),
+        'support_email':'support@science.canarie.ca',
+        'category':'Other',
+        'research_subject':'Software and development',
+        'tags':'CANARIE RPI reference'}
 
-from canarie_api import views
-
-urlpatterns = patterns('', 
-  url(r'^$', views.index, name='index'),
-  url(r'^info$', views.info, name='info'),
-  url(r'^stats$', views.stats, name='stats'),
-  url(r'^doc$', views.doc, name='doc'),
-  url(r'^releasenotes$', views.release_notes, name='releasenotes'),
-  url(r'^support$', views.support, name='support'),
-  url(r'^source$', views.source, name='source'),
-  url(r'^tryme$', views.tryme, name='tryme'),
-  url(r'^licence$', views.licence, name='licence'),
-  url(r'^provenance$', views.provenance, name='provenance'),
-  url(r'^app$', views.app, name='app'),
-  url(r'^update$', views.update, name='update'),
-  url(r'^reset$', views.reset, name='reset'),
-  url(r'^add$', views.add, name='add'),
-  url(r'^setinfo$', views.setinfo, name='setinfo'),
-)
+""" Default values for the Stat entry to the database
+"""
+stats = {'name' : '# invocations',
+        'value' : '0'}
