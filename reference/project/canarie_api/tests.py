@@ -51,6 +51,8 @@ from canarie_api.models import Info, Statistic
 
 def get_as_json(text):
     return JSONParser().parse(StringIO(text))
+    
+USAGE_NAME = '# invocations'
 
 # This file containes unit tests for the methods in the view.py file. 
 # For simplicity all the tests are in one test class
@@ -111,7 +113,11 @@ class ViewUtilsTests(TestCase):
                  "version":"aversion", \
                  "synopsis":"asynopsis", \
                  "institution":"ainstitution", \
-                 "releaseTime":"2014-01-07T18:50:36Z"}'
+                 "releaseTime":"2014-01-07T18:50:36Z",\
+                 "researchSubject":"Other",\
+                 "supportEmail":"test@science.canarie.ca",\
+                 "category":"Other",\
+                 "tags":["TAG1","TAG2"]}'
         self.assertTrue(view.validate_info_json(get_as_json(json)), 
                         'JSON should validate')
         
@@ -148,7 +154,7 @@ class ViewUtilsTests(TestCase):
     
     # Tests for the get_invocations method    
     def test_get_invocations(self):
-        inv = Statistic(name='invocations', value='5', last_reset=now())
+        inv = Statistic(name=USAGE_NAME, value='5', last_reset=now())
         inv.save()
         
         self.assertEqual(inv, view.get_invocations(), 
@@ -157,10 +163,10 @@ class ViewUtilsTests(TestCase):
     def test_get_invocations_non_existing(self):
         # check the db is actually clean
         with self.assertRaises(ObjectDoesNotExist):
-            Statistic.objects.get(name='invocations')
+            Statistic.objects.get(name=USAGE_NAME)
             
         inv = view.get_invocations()
-        self.assertEqual(inv.name, 'invocations', 
+        self.assertEqual(inv.name, USAGE_NAME, 
                          'The invocations entry should have been created')
         self.assertEqual(inv.value, '0', 
                          'The invocations value should have been created')
@@ -171,7 +177,11 @@ class ViewUtilsTests(TestCase):
                  "version":"aversion", \
                  "synopsis":"asynopsis", \
                  "institution":"ainstitution", \
-                 "releaseTime":"2014-01-07T18:50:36Z"}'
+                 "releaseTime":"2014-01-07T18:50:36Z",\
+                 "researchSubject":"Other",\
+                 "supportEmail":"test@science.canarie.ca",\
+                 "category":"Other",\
+                 "tags":["TAG1","TAG2"]}'
         
         with self.assertRaises(ObjectDoesNotExist):
             Info.objects.latest('pk')
@@ -205,18 +215,18 @@ class ViewUtilsTests(TestCase):
     # Test for reset_counter method
     def test_reset_counter(self):
         init_time = now() - datetime.timedelta(days=1)
-        inv = Statistic(name='invocations', value='5', last_reset=init_time) 
+        inv = Statistic(name=USAGE_NAME, value='5', last_reset=init_time) 
         inv.save()
         
         data = view.reset_counter(inv)
-        inv = Statistic.objects.get(name='invocations')
+        inv = Statistic.objects.get(name=USAGE_NAME)
         
         self.assertEqual(inv.value, '0', 'Should have been reset')
         self.assertTrue(inv.last_reset > init_time, 'Time should have been reset')
         
     # Test for increment_counter method
     def test_increment_counter(self):
-        inv = Statistic(name='invocations', value='5', last_reset=now()) 
+        inv = Statistic(name=USAGE_NAME, value='5', last_reset=now()) 
         inv.save()
         
         data = view.increment_counter(inv)

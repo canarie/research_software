@@ -262,7 +262,8 @@ def validate_info_json(data):
     """ Validate that all the required fields in the input are present.
     
     """
-    if set(('name', 'synopsis', 'version', 'institution', 'releaseTime')) <= set(data):
+    if set(('name', 'synopsis', 'version', 'institution', 'releaseTime', 
+            'researchSubject', 'supportEmail', 'category', 'tags')) <= set(data):
         return True
     raise ValueError('Invalid content')
   
@@ -278,7 +279,18 @@ def parse_info_json(data):
     write_field(info, 'support_email', data)
     write_field(info, 'category', data)
     write_field(info, 'research_subject', data)
-    write_field(info, 'tags', data)
+    if 'tags' in data and data.get('tags'):    
+        tags = data.get('tags')
+        try:
+            for index, tag in enumerate(tags):
+                info.tags += tag 
+                if index < len(tags)-1:
+                    info.tags += ' '
+        except:
+            info.tags = ''
+    else:
+        info.tags = ''        
+        
     if 'releaseTime' in data and data.get('releaseTime'):
         info.release_time = datetime.strptime(
                                 data.get('releaseTime'),
