@@ -135,13 +135,13 @@ def licence(request):
     """ Return a HTML representation of the current releasenotes 
     
     """
-    return HttpResponseRedirect('https://github.com/canarie/research_software/blob/master/licence.md')
+    return HttpResponseRedirect('https://github.com/canarie/research_software/blob/master/reference/licence.md')
     
 def provenance(request):
     """ Return a HTML representation of the current releasenotes 
     
     """
-    return HttpResponseRedirect('https://github.com/canarie/research_software/blob/master/provenance.md')
+    return HttpResponseRedirect('https://github.com/canarie/research_software/blob/master/reference/provenance.md')
 
 
 # Reference Application views and methods
