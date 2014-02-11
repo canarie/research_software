@@ -54,70 +54,63 @@ def get_as_json(text):
     
 USAGE_NAME = '# invocations'
 
-# This file containes unit tests for the methods in the view.py file. 
+valid_info_json_base = '{"name":"n", \
+                 "version":"v", \
+                 "synopsis":"s", \
+                 "institution":"i", \
+                 "releaseTime":"2014-01-07T18:50:36Z",\
+                 "researchSubject":"rs",\
+                 "supportEmail":"e@example.com",\
+                 "category":"o",'
+
+# This file contains unit tests for the methods in the view.py file. 
 # For simplicity all the tests are in one test class
 class ViewUtilsTests(TestCase):
     
     def setUp(self):
         self.factory = APIRequestFactory()
-    
-    # Tests for the write_field method
-    def test_write_field_good(self):
-        info = Info()
-        self.assertTrue(not info.name, 'Name should not be set')
-        view.write_field(info, "name", get_as_json('{"name":"aname"}'))
-        self.assertEquals(info.name, 'aname', 'Name should be set')
         
-    def test_write_field_value_not_in_info(self):
+    def test_get_field_value(self):
         info = Info()
-        self.assertRaises(ValueError, 
-                          view.write_field(info, "new", 
-                                           get_as_json('{"new":"val"}')), 
-                          'Should raise ValueError')
-        
-    def test_write_field_value_not_in_data(self):
-        info = Info()
-        self.assertRaises(ValueError, view.write_field(info, "name", 
-                          get_as_json('{"new":"val"}')), 
-                          'Should raise ValueError')
+        view.get_field(get_as_json('{"new":"val"}'), 'new')
     
+    def test_get_field_value_not_in_info(self):
+        info = Info()
+        with self.assertRaises(ValueError):
+            view.get_field(get_as_json('{"new":"val"}'), 'old')
+        
     # Tests for the parse_json method 
     def test_parse_info_json(self):
-        json = '{"name":"aname", \
-                 "version":"aversion", \
-                 "synopsis":"asynopsis", \
-                 "institution":"ainstitution", \
-                 "releaseTime":"2014-01-07T18:50:36Z"}'
+        json = valid_info_json_base + '"tags":["TAG1","TAG2", "TAG3"]}'
         info = view.parse_info_json(get_as_json(json))
-        self.assertEquals(info.name, 'aname', 'Info should be populated')
+        self.assertEquals(info.name, 'n', 'Info should be populated')
+        self.assertEquals(info.tags, 'TAG1 TAG2 TAG3', 'Info tags should be populated')
+    
+    def test_parse_info_json_no_tags(self):
+        json = valid_info_json_base + '"tags":[]}'
+        with self.assertRaises(ValueError):
+            info = view.parse_info_json(get_as_json(json))
+
         
     def test_parse_info_json_missing_element(self):
         json = '{"version":"aversion", \
                  "synopsis":"asynopsis", \
                  "institution":"ainstitution", \
                  "releaseTime":"2014-01-07T18:50:36Z"}'
-        info = view.parse_info_json(get_as_json(json))
-        self.assertEquals(info.name, '', 'Name should be empty')
+        with self.assertRaises(ValueError):
+            view.parse_info_json(get_as_json(json))
         
     def test_parse_info_json_missing_time(self):
         json = '{"name":"aname", \
                  "version":"aversion", \
                  "synopsis":"asynopsis", \
                  "institution":"ainstitution"}'
-        info = view.parse_info_json(get_as_json(json))
-        self.assertEquals(info.release_time, '', 'release_time should be empty')
-     
+        with self.assertRaises(ValueError):
+            info = view.parse_info_json(get_as_json(json))
+ 
     # Tests for the validate_json method 
     def test_validate_info_json(self):
-        json = '{"name":"aname", \
-                 "version":"aversion", \
-                 "synopsis":"asynopsis", \
-                 "institution":"ainstitution", \
-                 "releaseTime":"2014-01-07T18:50:36Z",\
-                 "researchSubject":"Other",\
-                 "supportEmail":"test@science.canarie.ca",\
-                 "category":"Other",\
-                 "tags":["TAG1","TAG2"]}'
+        json = valid_info_json_base + '"tags":["TAG1","TAG2"]}'
         self.assertTrue(view.validate_info_json(get_as_json(json)), 
                         'JSON should validate')
         
@@ -133,11 +126,15 @@ class ViewUtilsTests(TestCase):
     # Tests for the get_info method
     def test_get_info_existing(self):
         info = Info()
-        info.name = 'aname'
-        info.synopsis = 'synopsis'
-        info.version = 'version'
-        info.institution = 'institution'
+        info.name = 'n'
+        info.synopsis = 's'
+        info.version = 'v'
+        info.institution = 'i'
         info.release_time = now()
+        info.support_email = 'e'
+        info.research_subject = 'rs'
+        info.category = 'o'
+        info.tags = 'TAG1 TAG2'
         info.save()
         
         self.assertEqual(info, view.get_info(), 
@@ -173,15 +170,7 @@ class ViewUtilsTests(TestCase):
         
     # Tests for the set_info functionality
     def test_set_info(self):
-        data = '{"name":"aname", \
-                 "version":"aversion", \
-                 "synopsis":"asynopsis", \
-                 "institution":"ainstitution", \
-                 "releaseTime":"2014-01-07T18:50:36Z",\
-                 "researchSubject":"Other",\
-                 "supportEmail":"test@science.canarie.ca",\
-                 "category":"Other",\
-                 "tags":["TAG1","TAG2"]}'
+        data = valid_info_json_base + '"tags":["t1","t2"]}'
         
         with self.assertRaises(ObjectDoesNotExist):
             Info.objects.latest('pk')
@@ -193,7 +182,15 @@ class ViewUtilsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         
         info = Info.objects.latest('pk')
-        self.assertEquals(info.name, 'aname')
+        self.assertEquals(info.name, 'n')
+        self.assertEquals(info.synopsis, 's')
+        self.assertEquals(info.version, 'v')
+        self.assertEquals(info.institution, 'i')
+        self.assertTrue(info.release_time)
+        self.assertEquals(info.support_email, 'e@example.com')
+        self.assertEquals(info.research_subject, 'rs')
+        self.assertEquals(info.category, 'o')
+        self.assertEquals(info.tags, 't1 t2')
         
     def test_set_info_missing_field(self):
         data = '{"name":"aname", \

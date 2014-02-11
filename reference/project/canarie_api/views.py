@@ -217,7 +217,8 @@ def setinfo(request):
         serializer = InfoSerializer(info)
         return Response(data=serializer.data, content_type=JSON_CONTENT)
     except ValueError as e:
-        log.error('Invalid json data supplied {0}'.format(str(e)))  
+        log.error('Invalid json data supplied {0}'.format(str(e)))
+        log.error(data)
     return HttpResponseBadRequest('Invalid data')	    
   
 
@@ -272,13 +273,13 @@ def parse_info_json(data):
     
     """
     info = Info()
-    write_field(info, 'name', data)
-    write_field(info, 'synopsis', data)
-    write_field(info, 'version', data)
-    write_field(info, 'institution', data)
-    write_field(info, 'support_email', data)
-    write_field(info, 'category', data)
-    write_field(info, 'research_subject', data)
+    info.name = get_field(data, 'name')
+    info.synopsis = get_field(data, 'synopsis')
+    info.version = get_field(data, 'version') 
+    info.institution = get_field(data, 'institution')
+    info.support_email = get_field(data, 'supportEmail')    
+    info.category = get_field(data, 'category')
+    info.research_subject = get_field(data, 'researchSubject')
     if 'tags' in data and data.get('tags'):    
         tags = data.get('tags')
         try:
@@ -289,27 +290,27 @@ def parse_info_json(data):
         except:
             info.tags = ''
     else:
-        info.tags = ''        
+        raise ValueError('Field {0} not set'.format('tags'))        
         
     if 'releaseTime' in data and data.get('releaseTime'):
         info.release_time = datetime.strptime(
                                 data.get('releaseTime'),
                                 '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=utc)
     else:
-        info.release_time = ''
+        raise ValueError('Field {0} not set'.format('releaseTime'))
     
     return info
-  	  
-def write_field(info, field, data):
-    """ Write a field to an Info object from JSON data. 
     
+def get_field(data, field_name):
+    """ Get a field from the json data and return it. If it is not thair raise 
+        an error
+        
     """
-    try:
-        value = data.get(field) if data.get(field) else ''
-        setattr(info, field, value)
-    except :
-        raise ValueError('{0} not set'.format(field))
-
+    if field_name in data and data.get(field_name):
+        return data.get(field_name)
+    
+    raise ValueError('Field {0} not set'.format(field_name))
+  	  
 def num (s):
     """ Parse a number from a string. 
     
