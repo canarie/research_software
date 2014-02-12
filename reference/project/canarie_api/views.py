@@ -67,9 +67,28 @@ template = 'canarie_api/'
 
 JSON_CONTENT = 'application/json'
 
-name = 'name'
-invocations = 'invocations'
-synopsis = 'synopsis'
+STATS_NAME = 'name'
+STATS_VALUE = 'value'
+
+NAME = 'name'
+SYNOPSIS = 'synopsis'
+VERSION = 'version'
+INSTITUTION = 'institution'
+RELEASE_TIME = 'release_time'
+RELASE_TIME_JSON = 'releaseTime'
+SUPPORT_EMAIL = 'support_email'
+SUPPORT_EMAIL_JSON = 'supportEmail'
+CATEGORY = 'category'
+RESEARCH_SUBJECT = 'research_subject'
+RESEARCH_SUBJECT_JSON = 'researchSubject'
+TAGS = 'tags'
+
+EXPECTED_VALUES = set((NAME, SYNOPSIS, VERSION, INSTITUTION, RELASE_TIME_JSON, 
+            RESEARCH_SUBJECT_JSON, SUPPORT_EMAIL_JSON, CATEGORY, TAGS))
+
+TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
+
+FIELD_NOT_SET_ERROR = 'Field {0} not set'
 
 def index(request) : 
     return HttpResponse("Index page.")
@@ -230,11 +249,11 @@ def get_invocations():
     
     """
     try:
-        s = Statistic.objects.get(name=stats_defaults['name'])
+        s = Statistic.objects.get(name=stats_defaults[STATS_NAME])
         log.debug('Got {0}'.format(str(s)))
     except ObjectDoesNotExist:
-        s = Statistic(name=stats_defaults['name'], 
-                      value=stats_defaults['value'], 
+        s = Statistic(name=stats_defaults[STATS_NAME], 
+                      value=stats_defaults[STATS_VALUE], 
                       last_reset=now())
         log.debug('Created {0}'.format(str(s)))
     return s
@@ -247,24 +266,22 @@ def get_info():
     try: 
         s = Info.objects.latest('pk')
     except ObjectDoesNotExist:
-        s = Info(name=info_defaults['name'], 
-                 synopsis=info_defaults['synopsis'], 
-                 version=info_defaults['version'], 
-                 institution=info_defaults['institution'], 
-                 release_time=info_defaults['release_time'],
-                 support_email=info_defaults['support_email'],
-                 category=info_defaults['category'],
-                 research_subject=info_defaults['research_subject'],
-                 tags=info_defaults['tags'])
-        s.save()
+        s = Info(name=info_defaults[NAME], 
+                 synopsis=info_defaults[SYNOPSIS], 
+                 version=info_defaults[VERSION], 
+                 institution=info_defaults[INSTITUTION], 
+                 release_time=info_defaults[RELEASE_TIME],
+                 support_email=info_defaults[SUPPORT_EMAIL],
+                 category=info_defaults[CATEGORY],
+                 research_subject=info_defaults[RESEARCH_SUBJECT],
+                 tags=info_defaults[TAGS])
     return s
     
 def validate_info_json(data):
     """ Validate that all the required fields in the input are present.
     
     """
-    if set(('name', 'synopsis', 'version', 'institution', 'releaseTime', 
-            'researchSubject', 'supportEmail', 'category', 'tags')) <= set(data):
+    if EXPECTED_VALUES <= set(data):
         return True
     raise ValueError('Invalid content')
   
@@ -273,31 +290,31 @@ def parse_info_json(data):
     
     """
     info = Info()
-    info.name = get_field(data, 'name')
-    info.synopsis = get_field(data, 'synopsis')
-    info.version = get_field(data, 'version') 
-    info.institution = get_field(data, 'institution')
-    info.support_email = get_field(data, 'supportEmail')    
-    info.category = get_field(data, 'category')
-    info.research_subject = get_field(data, 'researchSubject')
-    if 'tags' in data and data.get('tags'):    
-        tags = data.get('tags')
+    info.name = get_field(data, NAME)
+    info.synopsis = get_field(data, SYNOPSIS)
+    info.version = get_field(data, VERSION) 
+    info.institution = get_field(data, INSTITUTION)
+    info.support_email = get_field(data, SUPPORT_EMAIL_JSON)    
+    info.category = get_field(data, CATEGORY)
+    info.research_subject = get_field(data, RESEARCH_SUBJECT_JSON)
+    if TAGS in data and data.get(TAGS) and not isinstance(data.get(TAGS), basestring):    
+        tags = data.get(TAGS)
         try:
             for index, tag in enumerate(tags):
                 info.tags += tag 
                 if index < len(tags)-1:
                     info.tags += ' '
         except:
-            info.tags = ''
+            raise ValueError(FIELD_NOT_SET_ERROR.format(TAGS))
     else:
-        raise ValueError('Field {0} not set'.format('tags'))        
+        raise ValueError(FIELD_NOT_SET_ERROR.format(TAGS))        
         
-    if 'releaseTime' in data and data.get('releaseTime'):
+    if RELASE_TIME_JSON in data and data.get(RELASE_TIME_JSON):
         info.release_time = datetime.strptime(
-                                data.get('releaseTime'),
-                                '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=utc)
+                                data.get(RELASE_TIME_JSON),
+                                TIME_FORMAT).replace(tzinfo=utc)
     else:
-        raise ValueError('Field {0} not set'.format('releaseTime'))
+        raise ValueError(FIELD_NOT_SET_ERROR.format(RELASE_TIME_JSON))
     
     return info
     
@@ -309,7 +326,7 @@ def get_field(data, field_name):
     if field_name in data and data.get(field_name):
         return data.get(field_name)
     
-    raise ValueError('Field {0} not set'.format(field_name))
+    raise ValueError(FIELD_NOT_SET_ERROR.format(field_name))
   	  
 def num (s):
     """ Parse a number from a string. 

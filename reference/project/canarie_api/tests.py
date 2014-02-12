@@ -90,7 +90,17 @@ class ViewUtilsTests(TestCase):
         json = valid_info_json_base + '"tags":[]}'
         with self.assertRaises(ValueError):
             info = view.parse_info_json(get_as_json(json))
-
+            
+    def test_parse_info_json_tags_full_string(self):
+        json = valid_info_json_base + '"tags":"tag tag tag"}'
+        with self.assertRaises(ValueError):
+            info = view.parse_info_json(get_as_json(json))
+            
+    def test_parse_info_json_tags_empty_string(self):
+        json = valid_info_json_base + '"tags":""}'
+        with self.assertRaises(ValueError):
+            info = view.parse_info_json(get_as_json(json))
+        
         
     def test_parse_info_json_missing_element(self):
         json = '{"version":"aversion", \
@@ -104,7 +114,11 @@ class ViewUtilsTests(TestCase):
         json = '{"name":"aname", \
                  "version":"aversion", \
                  "synopsis":"asynopsis", \
-                 "institution":"ainstitution"}'
+                 "institution":"ainstitution", \
+                 "researchSubject":"rs", \
+                 "supportEmail":"e@example.com", \
+                 "category":"o", \
+                 "tags":["TAG1","TAG2", "TAG3"]}'
         with self.assertRaises(ValueError):
             info = view.parse_info_json(get_as_json(json))
  
