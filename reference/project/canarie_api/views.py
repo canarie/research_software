@@ -203,6 +203,12 @@ def reset(request):
 def increment_counter(invocations):
     """ Increment the invocations statistic. 
     
+        The decorator @transaction.atomic wraps this method in an atomic 
+        transaction.  
+        
+        See https://docs.djangoproject.com/en/1.6/topics/db/transactions/#controlling-transactions-explicitly 
+        for more details.
+    
     """
     log.debug("Increment the counter")
     invocations.value = str(num(invocations.value) + 1)
@@ -212,7 +218,13 @@ def increment_counter(invocations):
 
 @transaction.atomic
 def reset_counter(invocations):
-    """ Reset the invocations statistic. 
+    """ Reset the invocations statistic.                     
+        
+        The decorator @transaction.atomic wraps this method in an atomic 
+        transaction.  
+        
+        See https://docs.djangoproject.com/en/1.6/topics/db/transactions/#controlling-transactions-explicitly 
+        for more details.
     
     """
     log.debug("Reset the counter")
