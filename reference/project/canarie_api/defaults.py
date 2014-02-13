@@ -1,5 +1,5 @@
 """
-Copyright 2013 - CANARIE Inc. All rights reserved
+Copyright 2014 - CANARIE Inc. All rights reserved
 
 Synopsis: Contains the default values for a new Info 
 

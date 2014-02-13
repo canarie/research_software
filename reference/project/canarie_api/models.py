@@ -34,19 +34,21 @@ POSSIBILITY OF SUCH DAMAGE.
 
 from django.db import models
 
+TEXT_FIELD_SIZE = 254
+
 class Info(models.Model):
     '''
         Defines the Info table in the database to store the data required by the 
         Canarie Research Middleware API.
     '''
-    name = models.CharField(max_length=254,blank=False)
+    name = models.CharField(max_length=TEXT_FIELD_SIZE,blank=False)
     synopsis = models.TextField(blank=False)
-    version = models.CharField(max_length=100,blank=False)
-    institution = models.CharField(max_length=100,blank=False)
+    version = models.CharField(max_length=TEXT_FIELD_SIZE,blank=False)
+    institution = models.CharField(max_length=TEXT_FIELD_SIZE,blank=False)
     release_time = models.DateTimeField(blank=False)
-    support_email = models.EmailField(max_length=254, blank=False)
-    category = models.CharField(max_length=254,blank=False)
-    research_subject = models.CharField(max_length=254,blank=False)
+    support_email = models.EmailField(max_length=TEXT_FIELD_SIZE, blank=False)
+    category = models.CharField(max_length=TEXT_FIELD_SIZE,blank=False)
+    research_subject = models.CharField(max_length=TEXT_FIELD_SIZE,blank=False)
     tags = models.TextField(blank=False)
   
     def __str__(self):
@@ -57,8 +59,8 @@ class Statistic(models.Model):
     '''
         Defines a generic statistic that can be stored in the database
     '''
-    name = models.CharField(max_length=100, blank=False)
-    value = models.CharField(max_length=100, blank=False)
+    name = models.CharField(max_length=TEXT_FIELD_SIZE, blank=False)
+    value = models.CharField(max_length=TEXT_FIELD_SIZE, blank=False)
     last_reset = models.DateTimeField(blank=False)
     
     def __str__(self):

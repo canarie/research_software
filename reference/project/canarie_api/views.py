@@ -242,10 +242,19 @@ def setinfo(request):
   
 
 # Utility methods
+
 @transaction.atomic
 def get_invocations():
     """ Get the invocations statistic from the db or seed with a new one if 
         not there.
+        
+        As this method accesses the database and creates a new entry if needed 
+        the database access needs to be wrapped in a transaction so that another 
+        call to the same method does not create a duplicate record.  The 
+        decorator @transaction.atomic wraps this method in an atomic 
+        transactions.  
+        See https://docs.djangoproject.com/en/1.6/topics/db/transactions/#controlling-transactions-explicitly 
+        for more details.
     
     """
     try:
@@ -261,6 +270,14 @@ def get_invocations():
 @transaction.atomic
 def get_info():
     """ Get the Info object from the db or seed with a new one if not there.
+    
+        As this method accesses the database and creates a new entry if needed 
+        the database access needs to be wrapped in a transaction so that another 
+        call to the same method does not create a duplicate record.  The 
+        decorator @transaction.atomic wraps this method in an atomic 
+        transactions.  
+        See https://docs.djangoproject.com/en/1.6/topics/db/transactions/#controlling-transactions-explicitly 
+        for more details.
     
     """
     try: 

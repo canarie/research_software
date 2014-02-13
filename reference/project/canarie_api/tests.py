@@ -35,6 +35,7 @@ from StringIO import StringIO
 
 import datetime
 import pytz
+from httplib import BAD_REQUEST
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpRequest
@@ -218,7 +219,7 @@ class ViewUtilsTests(TestCase):
         request = self.factory.put('/setinfo/', data, content_type='application/json')
         
         response = view.setinfo(request)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, BAD_REQUEST)
         
         with self.assertRaises(ObjectDoesNotExist):
             Info.objects.latest('pk')
