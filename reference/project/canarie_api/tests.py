@@ -53,7 +53,7 @@ from canarie_api.models import Info, Statistic
 def get_as_json(text):
     return JSONParser().parse(StringIO(text))
     
-USAGE_NAME = '# invocations'
+USAGE_NAME = 'invocations'
 
 valid_info_json_base = '{"name":"n", \
                  "version":"v", \
