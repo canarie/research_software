@@ -47,5 +47,5 @@ info = {'name':'Reference Service',
 
 """ Default values for the Stat entry to the database
 """
-stats = {'name' : '# invocations',
+stats = {'name' : 'invocations',
         'value' : '0'}
