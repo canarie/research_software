@@ -10,18 +10,18 @@ Blob Hash: $Id$
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-1. Redistributions of source code must retain the above copyright notice, 
+1. Redistributions of source code must retain the above copyright notice,
    this list of conditions and the following disclaimer.
 
-2. Redistributions in binary form must reproduce the above copyright notice, 
-   this list of conditions and the following disclaimer in the documentation 
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
    and/or other materials provided with the distribution.
 
-3. The name of the author may not be used to endorse or promote products 
+3. The name of the author may not be used to endorse or promote products
    derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY CANARIE Inc. "AS IS" AND ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
 EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
 EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
@@ -57,9 +57,17 @@ DEBUG = False
 
 TEMPLATE_DEBUG = True
 
-# TODO this needs changign when we get a host
 ALLOWED_HOSTS = ['*']
 
+# As this is a demonstration application the django database is being used as
+# a backend and broker. In production a full broker like RabbitMQ
+# (http://www.rabbitmq.com/) should be used.
+#
+# For more information please see:
+#   http://docs.celeryproject.org/en/latest/getting-started/
+#       first-steps-with-celery.html#first-steps
+BROKER_URL = 'django://'
+CELERY_RESULT_BACKEND = ('djcelery.backends.database:DatabaseBackend',)
 
 # Application definition
 
@@ -70,7 +78,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'canarie_api',
+    'canarie_service',
+    'canarie_platform',
     'rest_framework',
 )
 
@@ -143,7 +152,11 @@ LOGGING = {
             'propagate': True,
             'level':'DEBUG',
         },
-        'canarie_api': {
+        'canarie_service': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
+        'canarie_platform': {
             'handlers': ['file'],
             'level': 'DEBUG',
         },

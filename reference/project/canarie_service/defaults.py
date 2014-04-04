@@ -1,7 +1,7 @@
 """
-Copyright 2013 - CANARIE Inc. All rights reserved
+Copyright 2014 - CANARIE Inc. All rights reserved
 
-Synopsis: Production WSGI config for project on test server
+Synopsis: Contains the default values used in teh Service
 
 Blob Hash: $Id$
 
@@ -31,26 +31,31 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
+from django.utils.timezone import now
+
+from util.shared import (NAME, SYNOPSIS, VERSION, INSTITUTION,
+                         RELASE_TIME_JSON, RESEARCH_SUBJECT_JSON,
+                         SUPPORT_EMAIL_JSON, TAGS)
 
 """
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
+    Defualt values for a new Info entry to the database if one if not already
+    present
 """
+info = {'name': 'Reference Service',
+        'synopsis': 'The Reference Service implementation of the NEP-RPI API revision 6',
+        'version': '2.0',
+        'institution': 'CANARIE',
+        'release_time': now(),
+        'support_email': 'support@science.canarie.ca',
+        'category': 'Other',
+        'research_subject': 'Software and development',
+        'tags': 'CANARIE RPI reference'}
 
-import os
-import sys
-import site
+"""
+    Default values for the Stat entry to the database
+"""
+stats = {'name': 'invocations',
+         'value': '0'}
 
-site.addsitedir('/media/volume1/venv/ENV/lib/python2.7/site-packages')
-
-sys.path.append('/media/volume1/srv/www/reference/project')
-sys.path.append('/media/volume1/srv/www/reference/project/project')
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings-prod")
-
-activate_env = os.path.expanduser('/media/volume1/venv/ENV/bin'
-                                  '/activate_this.py')
-execfile(activate_env, dict(__file__=activate_env))
-
-import django.core.handlers.wsgi
-application = django.core.handlers.wsgi.WSGIHandler()
+EXPECTED_VALUES = set((NAME, SYNOPSIS, VERSION, INSTITUTION, RELASE_TIME_JSON,
+                       RESEARCH_SUBJECT_JSON, SUPPORT_EMAIL_JSON, TAGS))

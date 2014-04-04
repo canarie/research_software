@@ -1,7 +1,7 @@
-"""
-Copyright 2013 - CANARIE Inc. All rights reserved
+<!--
+Copyright 2014 - CANARIE Inc. All rights reserved
 
-Synopsis: Production WSGI config for project on test server
+Synopsis: Template for the stats page
 
 Blob Hash: $Id$
 
@@ -30,27 +30,22 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-"""
+-->
 
-"""
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
-"""
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Stats result</title>
+</head>
 
-import os
-import sys
-import site
+<body>
+  <h1>Service Stats</h1>
 
-site.addsitedir('/media/volume1/venv/ENV/lib/python2.7/site-packages')
+  <p>The current statistics for the Referece Service are:</p>
 
-sys.path.append('/media/volume1/srv/www/reference/project')
-sys.path.append('/media/volume1/srv/www/reference/project/project')
+  <p class="refInv">{{stats.name}}: {{stats.value}}</p>
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings-prod")
+  <p class="refReset">Last reset (UTC): {{stats.last_reset}}</p>
+</body>
 
-activate_env = os.path.expanduser('/media/volume1/venv/ENV/bin'
-                                  '/activate_this.py')
-execfile(activate_env, dict(__file__=activate_env))
-
-import django.core.handlers.wsgi
-application = django.core.handlers.wsgi.WSGIHandler()
+</html>

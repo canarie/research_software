@@ -1,11 +1,10 @@
-"""
-Copyright 2013 - CANARIE Inc. All rights reserved
+<!--
+Copyright 2014 - CANARIE Inc. All rights reserved
 
-Synopsis: Production WSGI config for project on test server
+Synopsis: Template for the service info page
 
 Blob Hash: $Id$
 
--------------------------------------------------------------------------------
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
@@ -30,27 +29,35 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-"""
+-->
 
-"""
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
-"""
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Info result</title>
+</head>
 
-import os
-import sys
-import site
+<body>
 
-site.addsitedir('/media/volume1/venv/ENV/lib/python2.7/site-packages')
+  <h1>Platform Info</h1>
 
-sys.path.append('/media/volume1/srv/www/reference/project')
-sys.path.append('/media/volume1/srv/www/reference/project/project')
+  <p>The current information about the Reference Platform is:</p>
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings-prod")
+  <p class="refName">Name: {{info.name}}</p>
 
-activate_env = os.path.expanduser('/media/volume1/venv/ENV/bin'
-                                  '/activate_this.py')
-execfile(activate_env, dict(__file__=activate_env))
+  <p class="refSyn">Synopsis: {{info.synopsis}}</p>
 
-import django.core.handlers.wsgi
-application = django.core.handlers.wsgi.WSGIHandler()
+  <p class="refVer">Version: {{info.version}}</p>
+
+  <p class="refRel">Release time (UTC): {{info.release_time}}</p>
+
+  <p class="refInst">Institution: {{info.institution}}</p>
+
+  <p class="refInst">Support email: {{info.support_email}}</p>
+
+  <p class="refInst">Research subject: {{info.research_subject}}</p>
+
+  <p class="refInst">Tags: {{info.tags}}</p>
+
+</body>
+</html>

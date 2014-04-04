@@ -1,7 +1,7 @@
 """
 Copyright 2013 - CANARIE Inc. All rights reserved
 
-Synopsis: Production WSGI config for project on test server
+Synopsis: Site URL configuration and routing
 
 Blob Hash: $Id$
 
@@ -32,25 +32,26 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
-"""
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
-"""
+from django.conf.urls import patterns, url
 
-import os
-import sys
-import site
+from canarie_platform import views
 
-site.addsitedir('/media/volume1/venv/ENV/lib/python2.7/site-packages')
-
-sys.path.append('/media/volume1/srv/www/reference/project')
-sys.path.append('/media/volume1/srv/www/reference/project/project')
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings-prod")
-
-activate_env = os.path.expanduser('/media/volume1/venv/ENV/bin'
-                                  '/activate_this.py')
-execfile(activate_env, dict(__file__=activate_env))
-
-import django.core.handlers.wsgi
-application = django.core.handlers.wsgi.WSGIHandler()
+urlpatterns = patterns('',
+                       url(r'^info$', views.info, name='info'),
+                       url(r'^stats$', views.stats, name='stats'),
+                       url(r'^doc$', views.doc, name='doc'),
+                       url(r'^releasenotes$', views.release_notes,
+                           name='releasenotes'),
+                       url(r'^support$', views.support, name='support'),
+                       url(r'^source$', views.source, name='source'),
+                       url(r'^tryme$', views.tryme, name='tryme'),
+                       url(r'^licence$', views.licence, name='licence'),
+                       url(r'^provenance$', views.provenance,
+                           name='provenance'),
+                       url(r'^factsheet$', views.factsheet, name='factsheet'),
+                       url(r'^app$', views.app, name='app'),
+                       url(r'^update$', views.update, name='update'),
+                       url(r'^reset$', views.reset, name='reset'),
+                       url(r'^add$', views.add, name='add'),
+                       url(r'^setinfo$', views.setinfo, name='setinfo'),
+                       )

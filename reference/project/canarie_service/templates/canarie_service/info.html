@@ -1,7 +1,7 @@
-"""
+<!--
 Copyright 2014 - CANARIE Inc. All rights reserved
 
-Synopsis: Contains the default values for a new Info 
+Synopsis: Template for the service info page
 
 Blob Hash: $Id$
 
@@ -10,18 +10,18 @@ Blob Hash: $Id$
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-1. Redistributions of source code must retain the above copyright notice, 
+1. Redistributions of source code must retain the above copyright notice,
    this list of conditions and the following disclaimer.
 
-2. Redistributions in binary form must reproduce the above copyright notice, 
-   this list of conditions and the following disclaimer in the documentation 
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
    and/or other materials provided with the distribution.
 
-3. The name of the author may not be used to endorse or promote products 
+3. The name of the author may not be used to endorse or promote products
    derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY CANARIE Inc. "AS IS" AND ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
 EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
 EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
@@ -30,22 +30,37 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-"""
-from django.utils.timezone import now
+-->
 
-""" Defualt values for a new Info entry to the database if one if not already present
-"""
-info = {'name':'Reference Service',
-        'synopsis':'The Reference Service implementation of the NEP-RPI API revision 6',
-        'version':'2.0',
-        'institution':'CANARIE',
-        'release_time':now(),
-        'support_email':'support@science.canarie.ca',
-        'category':'Other',
-        'research_subject':'Software and development',
-        'tags':'CANARIE RPI reference'}
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Info result</title>
+</head>
 
-""" Default values for the Stat entry to the database
-"""
-stats = {'name' : 'invocations',
-        'value' : '0'}
+<body>
+
+  <h1>Service Info</h1>
+
+  <p>The current information about the Reference Service is:</p>
+
+  <p class="refName">Name: {{info.name}}</p>
+
+  <p class="refSyn">Synopsis: {{info.synopsis}}</p>
+
+  <p class="refVer">Version: {{info.version}}</p>
+
+  <p class="refRel">Release time (UTC): {{info.release_time}}</p>
+
+  <p class="refInst">Institution: {{info.institution}}</p>
+
+  <p class="refInst">Support email: {{info.support_email}}</p>
+
+  <p class="refInst">Category: {{info.category}}</p>
+
+  <p class="refInst">Research subject: {{info.research_subject}}</p>
+
+  <p class="refInst">Tags: {{info.tags}}</p>
+
+</body>
+</html>

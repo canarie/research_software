@@ -1,14 +1,14 @@
 """
 Copyright 2013 - CANARIE Inc. All rights reserved
 
-Synopsis: Production WSGI config for project on test server
+Synopsis: Admin customization
 
 Blob Hash: $Id$
 
 -------------------------------------------------------------------------------
 
-Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice,
    this list of conditions and the following disclaimer.
@@ -32,25 +32,18 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
-"""
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
-"""
+from django.contrib import admin
 
-import os
-import sys
-import site
+from canarie_service.models import Info, Statistic
 
-site.addsitedir('/media/volume1/venv/ENV/lib/python2.7/site-packages')
 
-sys.path.append('/media/volume1/srv/www/reference/project')
-sys.path.append('/media/volume1/srv/www/reference/project/project')
+class InfoAdmin(admin.ModelAdmin):
+    pass
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings-prod")
 
-activate_env = os.path.expanduser('/media/volume1/venv/ENV/bin'
-                                  '/activate_this.py')
-execfile(activate_env, dict(__file__=activate_env))
+class StatisticAdmin(admin.ModelAdmin):
+    pass
 
-import django.core.handlers.wsgi
-application = django.core.handlers.wsgi.WSGIHandler()
+
+admin.site.register(Info, InfoAdmin)
+admin.site.register(Statistic, StatisticAdmin)

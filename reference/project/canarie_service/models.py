@@ -10,18 +10,18 @@ Blob Hash: $Id$
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-1. Redistributions of source code must retain the above copyright notice, 
+1. Redistributions of source code must retain the above copyright notice,
    this list of conditions and the following disclaimer.
 
-2. Redistributions in binary form must reproduce the above copyright notice, 
-   this list of conditions and the following disclaimer in the documentation 
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
    and/or other materials provided with the distribution.
 
-3. The name of the author may not be used to endorse or promote products 
+3. The name of the author may not be used to endorse or promote products
    derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY CANARIE Inc. "AS IS" AND ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
 EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
 EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
@@ -36,24 +36,26 @@ from django.db import models
 
 TEXT_FIELD_SIZE = 254
 
+
 class Info(models.Model):
     '''
-        Defines the Info table in the database to store the data required by the 
+        Defines the Info table in the database to store the data required by the
         Canarie Research Middleware API.
     '''
-    name = models.CharField(max_length=TEXT_FIELD_SIZE,blank=False)
+    name = models.CharField(max_length=TEXT_FIELD_SIZE, blank=False)
     synopsis = models.TextField(blank=False)
-    version = models.CharField(max_length=TEXT_FIELD_SIZE,blank=False)
-    institution = models.CharField(max_length=TEXT_FIELD_SIZE,blank=False)
+    version = models.CharField(max_length=TEXT_FIELD_SIZE, blank=False)
+    institution = models.CharField(max_length=TEXT_FIELD_SIZE, blank=False)
     release_time = models.DateTimeField(blank=False)
     support_email = models.EmailField(max_length=TEXT_FIELD_SIZE, blank=False)
-    category = models.CharField(max_length=TEXT_FIELD_SIZE,blank=False)
-    research_subject = models.CharField(max_length=TEXT_FIELD_SIZE,blank=False)
+    category = models.CharField(max_length=TEXT_FIELD_SIZE, blank=False)
+    research_subject = models.CharField(max_length=TEXT_FIELD_SIZE,
+                                        blank=False)
     tags = models.TextField(blank=False)
-  
+
     def __str__(self):
         return "name:{0},synopsis:{1},version:{2},institution:{3},release_time:{4},support_email{5},category{6},research_subject{7}, tags{8}".format(
-            self.name,self.synopsis, self.version, self.institution, self.release_time, self.support_email, self.category, self.research_subject, self.tags)
+               self.name, self.synopsis, self.version, self.institution, self.release_time, self.support_email, self.category, self.research_subject, self.tags)
 
 class Statistic(models.Model):
     '''
@@ -62,6 +64,6 @@ class Statistic(models.Model):
     name = models.CharField(max_length=TEXT_FIELD_SIZE, blank=False)
     value = models.CharField(max_length=TEXT_FIELD_SIZE, blank=False)
     last_reset = models.DateTimeField(blank=False)
-    
+
     def __str__(self):
         return 'name:{0}, value:{1}, last_reset:{2}'.format(self.name, self.value, self.last_reset)

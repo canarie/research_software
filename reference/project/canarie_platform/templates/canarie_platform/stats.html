@@ -1,27 +1,26 @@
 <!--
 Copyright 2014 - CANARIE Inc. All rights reserved
 
-Synopsis: Template for the support page
+Synopsis: Template for the stats page
 
 Blob Hash: $Id$
 
--------------------------------------------------------------------------------
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-1. Redistributions of source code must retain the above copyright notice, 
+1. Redistributions of source code must retain the above copyright notice,
    this list of conditions and the following disclaimer.
 
-2. Redistributions in binary form must reproduce the above copyright notice, 
-   this list of conditions and the following disclaimer in the documentation 
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
    and/or other materials provided with the distribution.
 
-3. The name of the author may not be used to endorse or promote products 
+3. The name of the author may not be used to endorse or promote products
    derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY CANARIE Inc. "AS IS" AND ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
 EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
 EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
@@ -35,19 +34,17 @@ POSSIBILITY OF SUCH DAMAGE.
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Reference Service Support Page</title>
+<title>Platform Stats result</title>
 </head>
 
 <body>
-  <h1>Support</h1>
+  <h1>Stats</h1>
 
-  <p>For support with this website please contact CANARIE at: </p>
+  <p>The current statistics for the Referece Platform are:</p>
 
-    <address>
-      <a href="mailto:support@science.canarie.ca">support@science.canarie.ca</a>
-    </address>
+  <p class="refInv">{{stats.name}}: {{stats.value}}</p>
 
-  <p></p>
+  <p class="refReset">Last reset (UTC): {{stats.last_reset}}</p>
 </body>
 
 </html>
