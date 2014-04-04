@@ -79,7 +79,7 @@ template = 'canarie_platform/'
 service_name = 'reference'
 
 DOC_URL = ('https://github.com/canarie/research_software/blob/master/reference'
-           '/ReferenceServiceDesignNote.docx')
+           '/ReferenceServiceAndPlatformDesignNote.docx')
 RELEASE_NOTES_URL = ('https://github.com/canarie/research_software/blob/master'
                      '/reference/release_notes.md')
 SOURCE_URL = ('https://github.com/canarie/research_software/tree/master'

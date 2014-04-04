@@ -77,7 +77,7 @@ log = logging.getLogger(__name__)
 template = 'canarie_service/'
 
 DOC_URL = ('https://github.com/canarie/research_software/blob/master/reference'
-           '/ReferenceServiceDesignNote.docx')
+           '/ReferenceServiceAndPlatformDesignNote.docx')
 RELEASE_NOTES_URL = ('https://github.com/canarie/research_software/blob/master'
                      '/reference/release_notes.md')
 SOURCE_URL = ('https://github.com/canarie/research_software/tree/master'
@@ -94,7 +94,6 @@ PROVENANCE_URL = ('https://github.com/canarie/research_software/blob/master'
 def info(request):
     """ Return a JSON or HTML representaion of the latest info depending up on
         supplied accept header.
-
     """
     i = get_info()
     if request.META['HTTP_ACCEPT'] == JSON_CONTENT:
@@ -108,7 +107,6 @@ def info(request):
 def stats(request):
     """ Return a JSON or HTML representaion of the current statistics depending
         up on supplied accept header.
-
     """
     s = get_invocations()
     if request.META['HTTP_ACCEPT'] == JSON_CONTENT:
@@ -117,51 +115,37 @@ def stats(request):
 
 
 def doc(request):
-    """ Return a HTML representation of the current documentation
-
-    """
+    """ Return a HTML representation of the current documentation """
     return HttpResponseRedirect(DOC_URL)
 
 
 def release_notes(request):
-    """ Return a HTML representation of the current releasenotes
-
-    """
+    """ Return a HTML representation of the current releasenotes """
     return HttpResponseRedirect(RELEASE_NOTES_URL)
 
 
 def support(request):
-    """ Return a HTML representation of the current support
-
-    """
+    """ Return a HTML representation of the current support """
     return render(request, template+'support.html')
 
 
 def source(request):
-    """ Return a HTML representation of the current source
-
-    """
+    """ Return a HTML representation of the current source """
     return HttpResponseRedirect(SOURCE_URL)
 
 
 def tryme(request):
-    """ Redirect to the application
-
-    """
+    """ Redirect to the application """
     return HttpResponseRedirect(reverse('canarie_service:app'))
 
 
 def licence(request):
-    """ Return a HTML representation of the current releasenotes
-
-    """
+    """ Return a HTML representation of the current releasenotes """
     return HttpResponseRedirect(LICENCE_URL)
 
 
 def provenance(request):
-    """ Return a HTML representation of the current releasenotes
-
-    """
+    """ Return a HTML representation of the current releasenotes """
     return HttpResponseRedirect(PROVENANCE_URL)
 
 
@@ -169,17 +153,13 @@ def provenance(request):
 # A simple counter application
 
 def app(request):
-    """ The demonstration counter application
-
-    """
+    """ The demonstration counter application """
     s = get_invocations()
     return render(request, template+'app.html', {'stats': s})
 
 
 def update(request):
-    """ Manage and display updates to the application invocation counter
-
-    """
+    """ Manage and display updates to the application invocation counter """
     if 'add' in request.POST:
         increment_counter(get_invocations())
     elif 'reset' in request.POST:
@@ -189,18 +169,14 @@ def update(request):
 
 @api_view(['PUT'])
 def add(request):
-    """ REST call to add to the counter
-
-    """
+    """ REST call to add to the counter """
     return Response(
         data=increment_counter(get_invocations()), content_type=JSON_CONTENT)
 
 
 @api_view(['PUT'])
 def reset(request):
-    """ REST call to reset the counter
-
-    """
+    """ REST call to reset the counter """
     return Response(
         data=reset_counter(get_invocations()), content_type=JSON_CONTENT)
 
@@ -215,7 +191,6 @@ def increment_counter(invocations):
         See https://docs.djangoproject.com/en/1.6/topics/db/transactions
             /#controlling-transactions-explicitly
         for more details.
-
     """
     log.debug("Increment the counter")
     invocations.value = str(num(invocations.value) + 1)
@@ -234,7 +209,6 @@ def reset_counter(invocations):
         See https://docs.djangoproject.com/en/1.6/topics/db/transactions
             /#controlling-transactions-explicitly
         for more details.
-
     """
     log.debug("Reset the counter")
     invocations.value = '0'
@@ -246,9 +220,7 @@ def reset_counter(invocations):
 
 @api_view(['PUT'])
 def setinfo(request):
-    """ Set the info data.
-
-    """
+    """ Set the info data """
     stream = StringIO(request.body)
     data = JSONParser().parse(stream)
     try:
@@ -278,7 +250,6 @@ def get_invocations():
         See https://docs.djangoproject.com/en/1.6/topics/db/transactions
                 /#controlling-transactions-explicitly
         for more details.
-
     """
     try:
         s = Statistic.objects.get(name=stats_defaults[STATS_NAME])
@@ -302,7 +273,6 @@ def get_info():
         See https://docs.djangoproject.com/en/1.6/topics/db/transactions
             /#controlling-transactions-explicitly
         for more details.
-
     """
     try:
         i = Info.objects.latest('pk')
@@ -322,7 +292,6 @@ def get_info():
 
 def parse_service_info_json(data):
     """ Create an Info object from JSON.
-
     """
     info = Info()
     info.name = get_field(data, NAME)
