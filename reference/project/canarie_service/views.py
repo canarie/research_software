@@ -236,7 +236,6 @@ def setinfo(request):
 
 
 # Utility methods
-
 @transaction.atomic
 def get_invocations():
     """ Get the invocations statistic from the db or seed with a new one if
@@ -260,6 +259,7 @@ def get_invocations():
                       last_reset=now())
         s.save()
     return s
+
 
 @transaction.atomic
 def get_info():
