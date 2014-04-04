@@ -278,7 +278,8 @@ def get_invocations():
         s = Statistic(name=stats_defaults[STATS_NAME],
                       value=stats_defaults[STATS_VALUE],
                       last_reset=now())
-        log.debug('Created {0}'.format(str(s)))
+        s.save()
+
     return s
 
 
@@ -296,9 +297,9 @@ def get_info():
         for more details.
     """
     try:
-        s = Info.objects.latest('pk')
+        i = Info.objects.latest('pk')
     except ObjectDoesNotExist:
-        s = Info(name=info_defaults[NAME],
+        i = Info(name=info_defaults[NAME],
                  synopsis=info_defaults[SYNOPSIS],
                  version=info_defaults[VERSION],
                  institution=info_defaults[INSTITUTION],
@@ -306,7 +307,8 @@ def get_info():
                  support_email=info_defaults[SUPPORT_EMAIL],
                  research_subject=info_defaults[RESEARCH_SUBJECT],
                  tags=info_defaults[TAGS])
-    return s
+        i.save()
+    return i
 
 
 def parse_info_json(data):

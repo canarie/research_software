@@ -1,6 +1,8 @@
 
 import exceptions
 
+TEXT_FIELD_SIZE = 254
+
 TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
 STATS_NAME = 'name'
 STATS_VALUE = 'value'

@@ -43,22 +43,22 @@ SERVICE_URL = ('http://127.0.0.1:8000/reference/service/add')
     Defualt values for a new Info entry to the database if one if not already
     present
 """
-info = {'name': 'Reference Service',
-        'synopsis': ('The Reference Service implementation of the NEP-RPI API'
-                     ' revision 6'),
+info = {'name': 'Reference Platform (INSERT LOCATION)',
+        'synopsis': ('The reference implementation of the NEP-RPI API for '
+                     'platforms revision 2'),
         'version': '2.0',
         'institution': 'CANARIE',
         'release_time': now(),
         'support_email': 'support@science.canarie.ca',
         'research_subject': 'Software and development',
-        'tags': 'CANARIE RPI reference'}
+        'tags': 'CANARIE RPI reference platform'}
 
 """ Default values for the Stat entry to the database
 """
-stats = {'name': 'invocations',
+stats = {'name': 'interactions',
          'value': '0'}
 
 EXPECTED_VALUES = set((shared.NAME, shared.SYNOPSIS, shared.VERSION,
                       shared.INSTITUTION, shared.RELASE_TIME_JSON,
                       shared.RESEARCH_SUBJECT_JSON, shared.SUPPORT_EMAIL_JSON,
-                      shared.CATEGORY, shared.TAGS))
+                      shared.TAGS))

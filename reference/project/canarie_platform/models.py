@@ -33,8 +33,7 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 from django.db import models
-
-TEXT_FIELD_SIZE = 254
+from util.shared import TEXT_FIELD_SIZE
 
 
 class Info(models.Model):
@@ -47,18 +46,12 @@ class Info(models.Model):
     institution = models.CharField(max_length=TEXT_FIELD_SIZE, blank=False)
     release_time = models.DateTimeField(blank=False)
     support_email = models.EmailField(max_length=TEXT_FIELD_SIZE, blank=False)
-    category = models.CharField(max_length=TEXT_FIELD_SIZE, blank=False)
     research_subject = models.CharField(max_length=TEXT_FIELD_SIZE,
                                         blank=False)
     tags = models.TextField(blank=False)
 
     def __str__(self):
-        return ('name:{0},synopsis:{1},version:{2},institution:{3}'
-                ',release_time:{4},support_email{5},category{6}'
-                ',research_subject{7}, tags{8}'.format(
-                    self.name, self.synopsis, self.version, self.institution,
-                    self.release_time, self.support_email, self.category,
-                    self.research_subject, self.tags))
+        return ('name:{0}'.format(self.name))
 
 
 class Statistic(models.Model):

@@ -41,15 +41,16 @@ from util.shared import (NAME, SYNOPSIS, VERSION, INSTITUTION,
     Defualt values for a new Info entry to the database if one if not already
     present
 """
-info = {'name': 'Reference Service',
-        'synopsis': 'The Reference Service implementation of the NEP-RPI API revision 6',
+info = {'name': 'Reference Service (INSERT LOCATION)',
+        'synopsis': ('The reference implementation of the NEP-RPI API for '
+                     'services revision 6'),
         'version': '2.0',
         'institution': 'CANARIE',
         'release_time': now(),
         'support_email': 'support@science.canarie.ca',
         'category': 'Other',
         'research_subject': 'Software and development',
-        'tags': 'CANARIE RPI reference'}
+        'tags': 'CANARIE RPI reference service'}
 
 """
     Default values for the Stat entry to the database
