@@ -51,14 +51,17 @@ from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
+from celery.result import AsyncResult
+
 from canarie_platform.defaults import info as info_defaults
 from canarie_platform.defaults import stats as stats_defaults
 from canarie_platform.models import Info
 from canarie_platform.models import Statistic
 from canarie_platform.serializers import InfoSerializer, StatSerializer
 from canarie_platform.serializers import convert
-from canarie_platform.utility import get_poll, start_poll, stop_poll
+from canarie_platform.utility import get_poll
 from canarie_platform.utility import get_configuration
+from canarie_platform.tasks import call_service
 
 from util.shared import (NAME, SYNOPSIS, VERSION, INSTITUTION, RELEASE_TIME,
                          RELASE_TIME_JSON, SUPPORT_EMAIL, SUPPORT_EMAIL_JSON,
@@ -185,6 +188,35 @@ def update(request):
     elif 'reset' in request.POST:
         reset_counter(get_invocations())
     return HttpResponseRedirect(reverse('canarie_platform:app'))
+
+
+@transaction.atomic
+def start_poll(name, url):
+    """ Start polling the named service"""
+    log.info('Starting polling the service')
+    poll = get_poll(name)
+    if poll.current_task_id:
+        result = AsyncResult(poll.current_task_id)
+        if not result.ready():
+            log.info('Current task {0} is not finished'.format(
+                     poll.current_task_id))
+            return
+        else:
+            log.info('No poll continue')
+    poll.url = url
+    call = call_service.apply_async(args=[name])
+    poll.current_task_id = call.task_id
+    poll.save()
+    log.info('Done scheduling call {0}'.format(call.task_id))
+
+
+@transaction.atomic
+def stop_poll(name):
+    """ Stop polling the named service"""
+    log.info('Stop service poll')
+    poll = get_poll(name)
+    poll.current_task_id = None
+    poll.save()
 
 
 @api_view(['PUT'])

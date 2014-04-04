@@ -46,8 +46,9 @@ from django.utils.timezone import now
 
 from canarie_platform import views as view
 from canarie_platform.models import Info, Statistic
+from canarie_platform.defaults import stats
 
-from util.shared import validate_info_json
+from util.shared import validate_info_json, NAME, STATS_NAME
 import defaults
 
 
@@ -148,25 +149,25 @@ class ViewUtilsTests(TestCase):
             Info.objects.latest('pk')
 
         info = view.get_info()
-        self.assertEqual(info.name, 'Reference Service',
+        self.assertEqual(info.name, defaults.info[NAME],
                          'The Reference entry should have been created')
 
     # Tests for the get_invocations method
     def test_get_invocations(self):
-        inv = Statistic(name=USAGE_NAME, value='5', last_reset=now())
+        inv = Statistic(name=stats[NAME], value='5', last_reset=now())
         inv.save()
 
         self.assertEqual(inv, view.get_invocations(),
-                         'Invocations statistic should be retrived from the '
-                         'database')
+                         ('Invocations statistic should be retrived from the '
+                          'database'))
 
     def test_get_invocations_non_existing(self):
         # check the db is actually clean
         with self.assertRaises(ObjectDoesNotExist):
-            Statistic.objects.get(name=USAGE_NAME)
+            Statistic.objects.get(name=stats[STATS_NAME])
 
         inv = view.get_invocations()
-        self.assertEqual(inv.name, USAGE_NAME,
+        self.assertEqual(inv.name, stats[STATS_NAME],
                          'The invocations entry should have been created')
         self.assertEqual(inv.value, '0',
                          'The invocations value should have been created')

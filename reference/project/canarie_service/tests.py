@@ -48,7 +48,7 @@ from django.utils.timezone import now
 from canarie_service import views as view
 from canarie_service.models import Info, Statistic
 
-from util.shared import validate_info_json
+from util.shared import validate_info_json, NAME
 import defaults
 
 
@@ -149,7 +149,7 @@ class ViewUtilsTests(TestCase):
             Info.objects.latest('pk')
 
         info = view.get_info()
-        self.assertEqual(info.name, 'Reference Service',
+        self.assertEqual(info.name, defaults.info[NAME],
                          'The Reference entry should have been created')
 
     # Tests for the get_invocations method
