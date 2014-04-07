@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="2" errors="0" failures="0" skip="0"><testcase classname="reference_integration.ReferenceIntegration" name="test_call_reference_service" time="0.129"></testcase><testcase classname="reference_integration.ReferenceIntegration" name="test_poll_service" time="5.086"></testcase></testsuite>

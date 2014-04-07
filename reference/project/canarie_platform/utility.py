@@ -42,8 +42,8 @@ from canarie_platform.defaults import SERVICE_URL
 
 log = logging.getLogger(__name__)
 
-MIN_SEC_DEFAULT = 60
-MAX_SEC_DEFAULT = 360
+MIN_SEC_DEFAULT = 1
+MAX_SEC_DEFAULT = 10
 
 
 @transaction.atomic

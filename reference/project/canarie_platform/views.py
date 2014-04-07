@@ -168,6 +168,7 @@ def app(request):
                   'running': poll.current_task_id is not None})
 
 
+@api_view(['POST'])
 def update(request):
     """ React to the users input on the platforma application form.
 
