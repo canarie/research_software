@@ -1,7 +1,9 @@
 *_unit.xml
+*_integration.xml
 *db.sqlite3
 *.pyc
-*.log
+*.log*
 *.orig
 *.swp
 *.*~
+*.db

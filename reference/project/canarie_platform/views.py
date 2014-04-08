@@ -61,6 +61,9 @@ from canarie_platform.serializers import InfoSerializer, StatSerializer
 from canarie_platform.serializers import convert
 from canarie_platform.utility import get_poll
 from canarie_platform.utility import get_configuration
+from canarie_platform.utility import (SERVICE_URL, DOC_URL, RELEASE_NOTES_URL,
+                                      SOURCE_URL, LICENCE_URL, PROVENANCE_URL,
+                                      FACTSHEET_URL)
 from canarie_platform.tasks import call_service
 
 from util.shared import (NAME, SYNOPSIS, VERSION, INSTITUTION, RELEASE_TIME,
@@ -77,19 +80,6 @@ log = logging.getLogger(__name__)
 
 template = 'canarie_platform/'
 service_name = 'reference'
-
-DOC_URL = ('https://github.com/canarie/research_software/blob/master/reference'
-           '/ReferenceServiceAndPlatformDesignNote.docx')
-RELEASE_NOTES_URL = ('https://github.com/canarie/research_software/blob/master'
-                     '/reference/release_notes.md')
-SOURCE_URL = ('https://github.com/canarie/research_software/tree/master'
-              '/reference')
-LICENCE_URL = ('https://github.com/canarie/research_software/blob/master'
-               '/reference/licence.md')
-PROVENANCE_URL = ('https://github.com/canarie/research_software/blob/master'
-                  '/reference/provenance.md')
-FACTSHEET_URL = ('https://github.com/canarie/research_software/blob/master'
-                 '/reference/provenance.md')
 
 
 # Research Middleware API implementation views and methods
@@ -120,12 +110,12 @@ def stats(request):
 
 def doc(request):
     """ Return a HTML representation of the current documentation """
-    return HttpResponseRedirect(DOC_URL)
+    return HttpResponseRedirect(get_configuration(DOC_URL).value)
 
 
 def release_notes(request):
     """ Return a HTML representation of the current releasenotes """
-    return HttpResponseRedirect(RELEASE_NOTES_URL)
+    return HttpResponseRedirect(get_configuration(RELEASE_NOTES_URL).value)
 
 
 def support(request):
@@ -135,7 +125,7 @@ def support(request):
 
 def source(request):
     """ Return a HTML representation of the current source """
-    return HttpResponseRedirect(SOURCE_URL)
+    return HttpResponseRedirect(get_configuration(SOURCE_URL).value)
 
 
 def tryme(request):
@@ -145,18 +135,17 @@ def tryme(request):
 
 def licence(request):
     """ Return a HTML representation of the current releasenotes """
-    return HttpResponseRedirect(LICENCE_URL)
+    return HttpResponseRedirect(get_configuration(LICENCE_URL).value)
 
 
 def provenance(request):
     """ Return a HTML representation of the current releasenotes """
-    return HttpResponseRedirect(PROVENANCE_URL)
+    return HttpResponseRedirect(get_configuration(PROVENANCE_URL).value)
 
 
 def factsheet(request):
     """ Return a HTML representation of the factsheet """
-    # TODO relink to correct factsheet
-    return HttpResponseRedirect(FACTSHEET_URL)
+    return HttpResponseRedirect(get_configuration(FACTSHEET_URL).value)
 
 
 # Reference Application views and methods
@@ -181,8 +170,8 @@ def update(request):
     """
     if 'start' in request.POST:
         increment_counter(get_invocations())
-        conf = get_configuration()
-        start_poll(service_name, conf.service_url)
+        conf = get_configuration(SERVICE_URL)
+        start_poll(service_name, conf.value)
     elif 'stop' in request.POST:
         stop_poll(service_name)
         increment_counter(get_invocations())

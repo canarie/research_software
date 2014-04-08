@@ -79,7 +79,8 @@ class Poll(models.Model):
 
 
 class Configuration(models.Model):
-    service_url = models.TextField(blank=False)
+    name = models.CharField(max_length=TEXT_FIELD_SIZE, blank=False)
+    value = models.TextField(blank=False)
 
     def __str__(self):
-        return 'Configuration details'
+        return 'Configuration details {}'.format(self.name)

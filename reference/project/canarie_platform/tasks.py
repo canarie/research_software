@@ -38,7 +38,7 @@ from httplib import OK
 
 import requests
 
-from canarie_platform.utility import get_poll, update_task_id
+from canarie_platform.utility import get_poll, update_task_id, remove_poll
 from celery import shared_task
 
 log = logging.getLogger(__name__)
@@ -66,7 +66,8 @@ def call_service(name):
         log.info('Continue running and schedule next poll for {0} seconds'.
                  format(interval))
         next_id = call_service.apply_async(args=[name], countdown=interval)
+        update_task_id(name, next_id)
     else:
         log.info('Not running just finish (current expected task is is not '
                  'this tasks id)')
-    update_task_id(name, next_id)
+        remove_poll(name)
