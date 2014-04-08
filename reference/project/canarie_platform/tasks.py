@@ -37,9 +37,15 @@ import random
 from httplib import OK
 
 import requests
+from requests.exceptions import RequestException
 
 from canarie_platform.utility import get_poll, update_task_id, remove_poll
+from canarie_platform.utility import get_configuration, MIN_SEC, MAX_SEC
+from util.shared import num
+
 from celery import shared_task
+
+
 
 log = logging.getLogger(__name__)
 
@@ -56,15 +62,21 @@ def call_service(name):
              call_service.request.id))
     if poll.current_task_id == call_service.request.id:
         log.info('Calling service at {0}'.format(poll.url))
-        r = requests.put(poll.url)
-        if r.status_code is OK:
-            log.info('Good response from service')
-        else:
-            log.error('Unable to call counter service: {0}'.format(r.reason))
+        try:
+            r = requests.put(poll.url)
 
-        interval = random.randint(poll.min_sec, poll.max_sec)
-        log.info('Continue running and schedule next poll for {0} seconds'.
-                 format(interval))
+            if r.status_code is OK:
+                log.info('Good response from service')
+            else:
+                log.error('Unable to call counter service: {0}'.format(r.reason))
+        except RequestException as e:
+            log.error('Unable to call counter service: {0}'.format(e))
+
+        min_sec = num(get_configuration(MIN_SEC).value)
+        max_sec = num(get_configuration(MAX_SEC).value)
+        interval = random.randint(min_sec, max_sec)
+        log.info('Continue running and schedule next poll for {0} seconds '
+                 '({1}:{2})'.format(interval, min_sec, max_sec))
         next_id = call_service.apply_async(args=[name], countdown=interval)
         update_task_id(name, next_id)
     else:

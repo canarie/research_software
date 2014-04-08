@@ -48,8 +48,8 @@ SOURCE_URL = 'source_url'
 LICENCE_URL = 'licence_url'
 PROVENANCE_URL = 'provenance_url'
 FACTSHEET_URL = 'factsheet_url'
-MIN_SEC_DEFAULT = 'min_sec'
-MAX_SEC_DEFAULT = 'max_sec'
+MIN_SEC = 'min_sec'
+MAX_SEC = 'max_sec'
 SUPPORT_EMAIL = 'support_email'
 
 DEFAULT_CONFIG = {
@@ -66,8 +66,8 @@ DEFAULT_CONFIG = {
     FACTSHEET_URL: ('https://github.com/canarie/research_software/blob/master'
                     '/reference/provenance.md'),
     SERVICE_URL: ('http://127.0.0.1:8000/reference/service/add'),
-    MIN_SEC_DEFAULT: '1',
-    MAX_SEC_DEFAULT: '10'
+    MIN_SEC: '1',
+    MAX_SEC: '10'
     }
 
 
@@ -84,9 +84,7 @@ def get_poll(name):
         poll = Poll.objects.get(name=name)
     except ObjectDoesNotExist:
         log.info('No poll exists, creating default')
-        poll = Poll(name=name,
-                    min_sec=get_configuration(MIN_SEC_DEFAULT).value,
-                    max_sec=get_configuration(MAX_SEC_DEFAULT).value)
+        poll = Poll(name=name)
         poll.save()
     return poll
 

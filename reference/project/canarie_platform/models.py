@@ -69,8 +69,6 @@ class Poll(models.Model):
     """ Used to keep track of polling state to a service """
     name = models.CharField(max_length=TEXT_FIELD_SIZE, blank=False,
                             unique=True)
-    min_sec = models.IntegerField(blank=False)
-    max_sec = models.IntegerField(blank=False)
     url = models.TextField()
     current_task_id = models.TextField(blank=True, null=True)
 
