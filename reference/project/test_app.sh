@@ -40,7 +40,7 @@ echo ""
 echo "UNIT TESTS"
 echo "=========="
 
-./manage.py test --with-xunit --xunit-file ../result_unit.xml
+./manage.py test --with-xunit --xunit-file=../result_unit.xml --verbosity=1
 UNIT_SUCCESS=$?
 
 echo ""
