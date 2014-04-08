@@ -41,6 +41,7 @@ from requests.exceptions import RequestException
 
 from canarie_platform.utility import get_poll, update_task_id, remove_poll
 from canarie_platform.utility import get_configuration, MIN_SEC, MAX_SEC
+from canarie_platform.utility import MIN_SEC_DEFAULT, MAX_SEC_DEFAULT
 from util.shared import num
 
 from celery import shared_task
@@ -56,30 +57,41 @@ def call_service(name):
         scheduled poll to the reference service.
     """
     log.info('Worker task called')
-    next_id = None
-    poll = get_poll(name)
-    log.info('Expected {0}, current {1}'.format(poll.current_task_id,
-             call_service.request.id))
-    if poll.current_task_id == call_service.request.id:
-        log.info('Calling service at {0}'.format(poll.url))
-        try:
-            r = requests.put(poll.url)
+    try:
+        next_id = None
+        poll = get_poll(name)
+        log.info('Expected {0}, current {1}'.format(poll.current_task_id,
+                 call_service.request.id))
+        if poll.current_task_id == call_service.request.id:
+            log.info('Calling service at {0}'.format(poll.url))
+            try:
+                r = requests.put(poll.url)
 
-            if r.status_code is OK:
-                log.info('Good response from service')
-            else:
-                log.error('Unable to call counter service: {0}'.format(r.reason))
-        except RequestException as e:
-            log.error('Unable to call counter service: {0}'.format(e))
+                if r.status_code is OK:
+                    log.info('Good response from service')
+                else:
+                    log.error('Unable to call counter '
+                              'service: {0}'.format(r.reason))
+            except RequestException as e:
+                log.error('Unable to call counter service: {0}'.format(e))
 
-        min_sec = num(get_configuration(MIN_SEC).value)
-        max_sec = num(get_configuration(MAX_SEC).value)
-        interval = random.randint(min_sec, max_sec)
-        log.info('Continue running and schedule next poll for {0} seconds '
-                 '({1}:{2})'.format(interval, min_sec, max_sec))
-        next_id = call_service.apply_async(args=[name], countdown=interval)
-        update_task_id(name, next_id)
-    else:
-        log.info('Not running just finish (current expected task is is not '
-                 'this tasks id)')
+            min_sec = num(get_configuration(MIN_SEC).value)
+            max_sec = num(get_configuration(MAX_SEC).value)
+            if min_sec <= 0 or max_sec < min_sec:
+                log.warning('Invalid min and max values set ({0}:{1}), using '
+                            'defaults'.format(min_sec, max_sec))
+                min_sec = num(MIN_SEC_DEFAULT)
+                max_sec = num(MAX_SEC_DEFAULT)
+
+            interval = random.randint(min_sec, max_sec)
+            log.info('Continue running and schedule next poll for {0} seconds '
+                     '({1}:{2})'.format(interval, min_sec, max_sec))
+            next_id = call_service.apply_async(args=[name], countdown=interval)
+            update_task_id(name, next_id)
+        else:
+            log.info('Not running just finish (current expected task is is not '
+                     'this tasks id)')
+            remove_poll(name)
+    except Exception as e:
+        log.error('An error occured. Stopping poll: {0}'.format(e))
         remove_poll(name)

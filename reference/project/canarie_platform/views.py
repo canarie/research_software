@@ -60,7 +60,7 @@ from canarie_platform.models import Statistic
 from canarie_platform.serializers import InfoSerializer, StatSerializer
 from canarie_platform.serializers import convert
 from canarie_platform.utility import get_poll
-from canarie_platform.utility import get_configuration
+from canarie_platform.utility import get_configuration, MIN_SEC, MAX_SEC
 from canarie_platform.utility import (SERVICE_URL, DOC_URL, RELEASE_NOTES_URL,
                                       SOURCE_URL, LICENCE_URL, PROVENANCE_URL,
                                       FACTSHEET_URL)
@@ -152,9 +152,11 @@ def factsheet(request):
 def app(request):
     """ The demonstration counter application """
     s = get_invocations()
+    min_sec = get_configuration(MIN_SEC).value
+    max_sec = get_configuration(MAX_SEC).value
     poll = get_poll(service_name)
-    return render(request, template+'app.html', {'stats': s, 'poll': poll,
-                  'running': poll.current_task_id is not None})
+    return render(request, template+'app.html', {'stats': s, 'min': min_sec,
+                  'max': max_sec, 'running': poll.current_task_id is not None})
 
 
 @api_view(['POST'])
