@@ -1,7 +1,7 @@
 """
 Copyright 2014 - CANARIE Inc. All rights reserved
 
-Synopsis: Utility methods used in the Platform
+Tests for utility methods used in the reference application
 
 Blob Hash: $Id$
 

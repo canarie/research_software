@@ -36,29 +36,33 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 
-echo "Delete old db is present"
+echo ""
+echo "UNIT TESTS"
+echo "=========="
+
+./manage.py test --with-xunit --xunit-file ../result_unit.xml
+UNIT_SUCCESS=$?
+
+echo ""
+echo "INTEGRATION TESTS"
+echo "=========="
 rm db.sqlite3
 
-echo "Recreate db from initial_data.json"
-./manage.py syncdb --noinput
+# Recreate db from initial_data.json
+./manage.py syncdb --noinput &> /dev/null
 
-echo "Start celery"
-celery -q -A project worker -l info --statedb=./celery.worker.state &
+celery -q -A project worker -l info --statedb=./celery.worker.state &> /dev/null &
+
 
 CELERY_PID=$!
 CELERY_RESULT=$?
-
-echo "Celery PID " $CELERY_PID
 
 if [[ CELERY_RESULT -ne 0 ]]; then
     echo "Could not start celery, failing integration tests!"
     exit 1
 fi
 
-sleep 5
-
-echo "Run django"
-./manage.py runserver &
+./manage.py runserver &> /dev/null &
 
 MANAGE_PID=$!
 MANAGE_RESULT=$?
@@ -68,20 +72,21 @@ if [[ MANAGE_RESULT -ne 0 ]]; then
     exit 1
 fi
 
-sleep 2
+sleep 5
 # perform integration tests
 cd ../integration/python/
 ./run_tests.sh
-SUCCESS=$?
+INT_SUCCESS=$?
 
 
 # shutdown django server here
-echo "Shutting down django"
-ps auxww | grep 'runserver' | grep -v 'grep' | awk '{print $2}' | xargs kill
+ps auxww | grep 'runserver' | grep -v 'grep' | awk '{print $2}' | xargs kill &> /dev/null
 
 # shutdown celery here
-echo "Shutting down celery"
-kill ${CELERY_PID}
+kill ${CELERY_PID} &> /dev/null
 
+if (( $UNIT_SUCCESS == 0 && $INT_SUCCESS == 0 )); then
+    exit 0
+fi
 
-exit $SUCCESS
+exit 1
