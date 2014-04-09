@@ -72,7 +72,7 @@ class ReferenceIntegration(unittest.TestCase):
                              'Unable to call reference service')
             initial_result = r.json()['invocations']
 
-            payload = {'start': 'start'}
+            payload = {'action': 'start'}
             r = requests.post('{}/reference/platform/update'.format(
                               reference_url),
                               headers=headers, data=payload)

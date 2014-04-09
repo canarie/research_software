@@ -170,17 +170,23 @@ def update(request):
                 the platform)
             Reset the count of interations with the platform
     """
-    if 'start' in request.POST:
+    if check_for_param(request.POST, 'start'):
         increment_counter(get_invocations())
         conf = get_configuration(SERVICE_URL)
         start_poll(service_name, conf.value)
-    elif 'stop' in request.POST:
+    elif check_for_param(request.POST, 'stop'):
         stop_poll(service_name)
         increment_counter(get_invocations())
-    elif 'reset' in request.POST:
+    elif check_for_param(request.POST, 'reset'):
         reset_counter(get_invocations())
     return HttpResponseRedirect(reverse('canarie_platform:app'))
 
+
+def check_for_param(param_list, param):
+    """ Checks that a given param is set in the POST params, either as supplied
+        from form data or as the 'action' query paramater
+    """
+    return param in param_list or param_list.get('action', '') == param
 
 @transaction.atomic
 def start_poll(name, url):
@@ -209,20 +215,6 @@ def stop_poll(name):
     poll = get_poll(name)
     poll.current_task_id = None
     poll.save()
-
-
-@api_view(['PUT'])
-def add(request):
-    """ REST call to add to the counter """
-    return Response(
-        data=increment_counter(get_invocations()), content_type=JSON_CONTENT)
-
-
-@api_view(['PUT'])
-def reset(request):
-    """ REST call to reset the counter """
-    return Response(
-        data=reset_counter(get_invocations()), content_type=JSON_CONTENT)
 
 
 @transaction.atomic
