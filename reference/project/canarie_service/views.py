@@ -214,8 +214,7 @@ def reset_counter(invocations):
     invocations.value = '0'
     invocations.last_reset = now()
     invocations.save()
-    serializer = StatSerializer(invocations)
-    return serializer.data
+    return convert(invocations)
 
 
 @api_view(['PUT'])

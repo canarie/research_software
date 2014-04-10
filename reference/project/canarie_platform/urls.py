@@ -51,5 +51,8 @@ urlpatterns = patterns('',
                        url(r'^factsheet$', views.factsheet, name='factsheet'),
                        url(r'^app$', views.app, name='app'),
                        url(r'^update$', views.update, name='update'),
+                       url(r'^start$', views.start, name='start'),
+                       url(r'^stop$', views.stop, name='stop'),
+                       url(r'^reset$', views.reset, name='reset'),
                        url(r'^setinfo$', views.setinfo, name='setinfo'),
                        )

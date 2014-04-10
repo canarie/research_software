@@ -156,7 +156,7 @@ def app(request):
     max_sec = get_configuration(MAX_SEC).value
     poll = get_poll(service_name)
     return render(request, template+'app.html', {'stats': s, 'min': min_sec,
-                  'max': max_sec, 'running': poll.current_task_id is not None})
+                  'max': max_sec, 'running': poll_running(poll)})
 
 
 @api_view(['POST'])
@@ -171,22 +171,46 @@ def update(request):
             Reset the count of interations with the platform
     """
     if check_for_param(request.POST, 'start'):
-        increment_counter(get_invocations())
-        conf = get_configuration(SERVICE_URL)
-        start_poll(service_name, conf.value)
+        start(request)
     elif check_for_param(request.POST, 'stop'):
-        stop_poll(service_name)
-        increment_counter(get_invocations())
+        stop(request)
     elif check_for_param(request.POST, 'reset'):
-        reset_counter(get_invocations())
+        reset(request)
+
     return HttpResponseRedirect(reverse('canarie_platform:app'))
 
 
 def check_for_param(param_list, param):
-    """ Checks that a given param is set in the POST params, either as supplied
-        from form data or as the 'action' query paramater
+    """ Checks that a given param is set in the POST params
     """
-    return param in param_list or param_list.get('action', '') == param
+    return param in param_list
+
+
+@api_view(['PUT'])
+def start(request):
+    increment_counter(get_invocations())
+    conf = get_configuration(SERVICE_URL)
+    return create_running_response(start_poll(service_name, conf.value))
+
+
+@api_view(['PUT'])
+def stop(request):
+    increment_counter(get_invocations())
+    return create_running_response(stop_poll(service_name))
+
+
+@api_view(['PUT'])
+def reset(request):
+    return Response(
+        data=reset_counter(get_invocations()), content_type=JSON_CONTENT)
+
+
+def create_running_response(running):
+    status = dict()
+    status['running'] = running
+    log.info('running is: {0}'.format(running))
+    return Response(status, content_type=JSON_CONTENT)
+
 
 @transaction.atomic
 def start_poll(name, url):
@@ -205,7 +229,11 @@ def start_poll(name, url):
     call = call_service.apply_async(args=[name])
     poll.current_task_id = call.task_id
     poll.save()
-    log.info('Done scheduling call {0}'.format(call.task_id))
+    return poll_running(poll)
+
+
+def poll_running(poll):
+    return (poll.current_task_id is not None)
 
 
 @transaction.atomic
@@ -215,6 +243,7 @@ def stop_poll(name):
     poll = get_poll(name)
     poll.current_task_id = None
     poll.save()
+    return poll_running(poll)
 
 
 @transaction.atomic
@@ -246,12 +275,11 @@ def reset_counter(invocations):
             /#controlling-transactions-explicitly
         for more details.
     """
-    log.debug("Reset the counter")
+    log.info("Reset the counter")
     invocations.value = '0'
     invocations.last_reset = now()
     invocations.save()
-    serializer = StatSerializer(invocations)
-    return serializer.data
+    return convert(invocations)
 
 
 @api_view(['PUT'])

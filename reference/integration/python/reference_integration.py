@@ -72,12 +72,15 @@ class ReferenceIntegration(unittest.TestCase):
                              'Unable to call reference service')
             initial_result = r.json()['invocations']
 
-            payload = {'action': 'start'}
-            r = requests.post('{}/reference/platform/update'.format(
-                              reference_url),
-                              headers=headers, data=payload)
+            r = requests.put('{}/reference/platform/start'.format(
+                             reference_url),
+                             headers=headers)
             self.assertEqual(r.status_code, OK,
-                             'Unable to call reference platform')
+                             'Unable to call reference platform {0} {1}'
+                             .format(r.status_code, r.reason))
+
+            self.assertEqual(r.json()['running'], True,
+                             'Should be running ' + r.content)
 
             time.sleep(pollinterval)
             r = requests.get('{}/reference/service/stats'.format(
