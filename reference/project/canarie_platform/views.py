@@ -209,6 +209,7 @@ def create_running_response(running):
     status = dict()
     status['running'] = running
     log.info('running is: {0}'.format(running))
+    log.info('status is: {0}'.format(status))
     return Response(status, content_type=JSON_CONTENT)
 
 
@@ -222,7 +223,7 @@ def start_poll(name, url):
         if not result.ready():
             log.info('Current task {0} is not finished'.format(
                      poll.current_task_id))
-            return
+            return poll_running(poll)
         else:
             log.info('No poll continue')
     poll.url = url
@@ -233,6 +234,7 @@ def start_poll(name, url):
 
 
 def poll_running(poll):
+    log.info(poll.current_task_id)
     return (poll.current_task_id is not None)
 
 

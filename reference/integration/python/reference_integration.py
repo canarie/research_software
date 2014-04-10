@@ -66,6 +66,14 @@ class ReferenceIntegration(unittest.TestCase):
             platform results in at least one call to the service
         '''
         try:
+            # ensure stopped
+            r = requests.put('{}/reference/platform/stop'.format(
+                             reference_url), headers=headers)
+            self.assertEqual(r.status_code, OK,
+                             'Unable to call reference platform {0} {1}'
+                             .format(r.status_code, r.reason))
+
+
             r = requests.get('{}/reference/service/stats'.format(
                              reference_url), headers=headers)
             self.assertEqual(r.status_code, OK,
@@ -73,8 +81,7 @@ class ReferenceIntegration(unittest.TestCase):
             initial_result = r.json()['invocations']
 
             r = requests.put('{}/reference/platform/start'.format(
-                             reference_url),
-                             headers=headers)
+                             reference_url), headers=headers)
             self.assertEqual(r.status_code, OK,
                              'Unable to call reference platform {0} {1}'
                              .format(r.status_code, r.reason))
@@ -89,19 +96,25 @@ class ReferenceIntegration(unittest.TestCase):
                              'Unable to call reference service')
             self.assertGreater(r.json()['invocations'], initial_result,
                                'Stats should have incremented {} {}'.format(
-                                    initial_result, r.json()['invocations']))
+                               initial_result, r.json()['invocations']))
+
+            # ensure stopped
+            r = requests.put('{}/reference/platform/stop'.format(
+                             reference_url), headers=headers)
+            self.assertEqual(r.status_code, OK,
+                             'Unable to call reference platform {0} {1}'
+                             .format(r.status_code, r.reason))
 
         except requests.ConnectionError:
             self.fail("Could not connect to host!")
 
     def test_poll_service_stop(self):
         ''' Test polling service can be stopped'''
-        
+
         try:
-            payload = {'action': 'stop'}
-            r = requests.post('{}/reference/platform/update'.format(
-                              reference_url),
-                              headers=headers, data=payload)
+            r = requests.put('{}/reference/platform/stop'.format(
+                             reference_url),
+                             headers=headers)
             self.assertEqual(r.status_code, OK,
                              'Unable to call reference platform')
 
@@ -110,9 +123,9 @@ class ReferenceIntegration(unittest.TestCase):
             self.assertEqual(r.status_code, OK,
                              'Unable to call reference service')
             initial_result = r.json()['invocations']
-            
+
             time.sleep(pollinterval)
-            
+
             r = requests.get('{}/reference/service/stats'.format(
                              reference_url), headers=headers)
             self.assertEqual(r.status_code, OK,
@@ -126,21 +139,20 @@ class ReferenceIntegration(unittest.TestCase):
 
     def test_platform_stats(self):
         ''' Test platform stats can be updated'''
-        
+
         try:
             r = requests.get('{}/reference/platform/stats'.format(
                              reference_url), headers=headers)
             self.assertEqual(r.status_code, OK,
                              'Unable to call reference platform')
             initial_results = r.json()
-            
-            payload = {'action': 'stop'}
-            r = requests.post('{}/reference/platform/update'.format(
-                              reference_url),
-                              headers=headers, data=payload)
+
+            r = requests.put('{}/reference/platform/start'.format(
+                             reference_url),
+                             headers=headers)
             self.assertEqual(r.status_code, OK,
                              'Unable to call reference platform')
-            
+
             r = requests.get('{}/reference/platform/stats'.format(
                              reference_url), headers=headers)
             self.assertEqual(r.status_code, OK,
@@ -151,14 +163,12 @@ class ReferenceIntegration(unittest.TestCase):
             self.assertEqual(r.json()['lastReset'], initial_results['lastReset'],
                                'Platform Stats should have same reset time. Initial value: {}, current: {}'.format(
                                     initial_results['lastReset'], r.json()['lastReset']))
-            
-            payload = {'action': 'start'}
-            r = requests.post('{}/reference/platform/update'.format(
-                              reference_url),
-                              headers=headers, data=payload)
+
+            r = requests.put('{}/reference/platform/start'.format(
+                             reference_url), headers=headers)
             self.assertEqual(r.status_code, OK,
                              'Unable to call reference platform')
-            
+
             r = requests.get('{}/reference/platform/stats'.format(
                              reference_url), headers=headers)
             self.assertEqual(r.status_code, OK,
@@ -169,29 +179,27 @@ class ReferenceIntegration(unittest.TestCase):
             self.assertEqual(r.json()['lastReset'], initial_results['lastReset'],
                                'Platform Stats should have same reset time. Initial value: {}, current: {}'.format(
                                     initial_results['lastReset'], r.json()['lastReset']))
-        
+
         except requests.ConnectionError:
             self.fail("Could not connect to host!")
-            
+
     def test_platform_stats_reset(self):
         ''' Test platform stats can be reset'''
-        
+
         try:
             r = requests.get('{}/reference/platform/stats'.format(
                              reference_url), headers=headers)
             self.assertEqual(r.status_code, OK,
                              'Unable to call reference platform')
             initial_results = r.json()
-            
+
             time.sleep(2)
-            
-            payload = {'action': 'reset'}
-            r = requests.post('{}/reference/platform/update'.format(
-                              reference_url),
-                              headers=headers, data=payload)
+
+            r = requests.put('{}/reference/platform/reset'.format(
+                             reference_url), headers=headers)
             self.assertEqual(r.status_code, OK,
                              'Unable to call reference platform')
-            
+
             r = requests.get('{}/reference/platform/stats'.format(
                              reference_url), headers=headers)
             self.assertEqual(r.status_code, OK,
@@ -202,6 +210,6 @@ class ReferenceIntegration(unittest.TestCase):
             self.assertNotEqual(r.json()['lastReset'], initial_results['lastReset'],
                                'Platform Stats should not have same reset time. Initial value: {}, current: {}'.format(
                                     initial_results['lastReset'], r.json()['lastReset']))
-            
+
         except requests.ConnectionError:
             self.fail("Could not connect to host!")
