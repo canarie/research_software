@@ -63,7 +63,7 @@ def call_service(name):
         log.info('Expected {0}, current {1}'.format(poll.current_task_id,
                  call_service.request.id))
         if poll.current_task_id == call_service.request.id:
-            log.info('Calling service at {0}'.format(poll.url))
+            log.info('Calling service at url {0}'.format(poll.url))
             try:
                 r = requests.put(poll.url)
 
@@ -89,8 +89,8 @@ def call_service(name):
             next_id = call_service.apply_async(args=[name], countdown=interval)
             update_task_id(name, next_id)
         else:
-            log.info('Not running just finish (current expected task is is not '
-                     'this tasks id)')
+            log.info('Not running just finish (current expected task is is not'
+                     ' this tasks id)')
             remove_poll(name)
     except Exception as e:
         log.error('An error occured. Stopping poll: {0}'.format(e))

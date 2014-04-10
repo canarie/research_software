@@ -158,6 +158,7 @@ def app(request):
     return render(request, template+'app.html', {'stats': s})
 
 
+@api_view(['POST'])
 def update(request):
     """ Manage and display updates to the application invocation counter """
     if 'add' in request.POST:

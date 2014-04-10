@@ -171,11 +171,11 @@ def update(request):
             Reset the count of interations with the platform
     """
     if check_for_param(request.POST, 'start'):
-        start(request)
+        do_start()
     elif check_for_param(request.POST, 'stop'):
-        stop(request)
+        do_stop()
     elif check_for_param(request.POST, 'reset'):
-        reset(request)
+        do_reset()
 
     return HttpResponseRedirect(reverse('canarie_platform:app'))
 
@@ -187,6 +187,10 @@ def check_for_param(param_list, param):
 
 @api_view(['PUT'])
 def start(request):
+    return do_start()
+
+
+def do_start():
     """ Start polling the service
 
         Returns JOSN {"running": true}
@@ -198,6 +202,10 @@ def start(request):
 
 @api_view(['PUT'])
 def stop(request):
+    return do_stop()
+
+
+def do_stop():
     """ Stop polling the service
 
         Returns JOSN {"running": false}
@@ -212,6 +220,10 @@ def reset(request):
 
         Returns stats JSON object
     """
+    return do_reset()
+
+
+def do_reset():
     return Response(
         data=reset_counter(get_invocations()), content_type=JSON_CONTENT)
 
@@ -244,7 +256,6 @@ def start_poll(name, url):
 
 
 def poll_running(poll):
-    log.info(poll.current_task_id)
     return (poll.current_task_id is not None)
 
 
@@ -269,7 +280,7 @@ def increment_counter(invocations):
             /#controlling-transactions-explicitly
         for more details.
     """
-    log.debug("Increment the counter")
+    log.info("Increment the counter")
     invocations.value = str(num(invocations.value) + 1)
     invocations.save()
     serializer = StatSerializer(invocations)
