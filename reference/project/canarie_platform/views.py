@@ -181,13 +181,16 @@ def update(request):
 
 
 def check_for_param(param_list, param):
-    """ Checks that a given param is set in the POST params
-    """
+    """ Checks that a given param is set in the POST params """
     return param in param_list
 
 
 @api_view(['PUT'])
 def start(request):
+    """ Start polling the service
+
+        Returns JOSN {"running": true}
+    """
     increment_counter(get_invocations())
     conf = get_configuration(SERVICE_URL)
     return create_running_response(start_poll(service_name, conf.value))
@@ -195,21 +198,28 @@ def start(request):
 
 @api_view(['PUT'])
 def stop(request):
+    """ Stop polling the service
+
+        Returns JOSN {"running": false}
+    """
     increment_counter(get_invocations())
     return create_running_response(stop_poll(service_name))
 
 
 @api_view(['PUT'])
 def reset(request):
+    """ REST call to reset the counter
+
+        Returns stats JSON object
+    """
     return Response(
         data=reset_counter(get_invocations()), content_type=JSON_CONTENT)
 
 
 def create_running_response(running):
+    """ Formats a response with the stats JSON packet """
     status = dict()
     status['running'] = running
-    log.info('running is: {0}'.format(running))
-    log.info('status is: {0}'.format(status))
     return Response(status, content_type=JSON_CONTENT)
 
 
