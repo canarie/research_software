@@ -40,7 +40,7 @@ from httplib import OK
 
 reference_url = 'http://localhost:8000'
 headers = {'accept': 'application/json'}
-
+pollinterval = 10
 
 class ReferenceIntegration(unittest.TestCase):
     def test_call_reference_service(self):
@@ -79,7 +79,7 @@ class ReferenceIntegration(unittest.TestCase):
             self.assertEqual(r.status_code, OK,
                              'Unable to call reference platform')
 
-            time.sleep(5)
+            time.sleep(pollinterval)
             r = requests.get('{}/reference/service/stats'.format(
                              reference_url), headers=headers)
             self.assertEqual(r.status_code, OK,
@@ -88,5 +88,117 @@ class ReferenceIntegration(unittest.TestCase):
                                'Stats should have incremented {} {}'.format(
                                     initial_result, r.json()['invocations']))
 
+        except requests.ConnectionError:
+            self.fail("Could not connect to host!")
+
+    def test_poll_service_stop(self):
+        ''' Test polling service can be stopped'''
+        
+        try:
+            payload = {'action': 'stop'}
+            r = requests.post('{}/reference/platform/update'.format(
+                              reference_url),
+                              headers=headers, data=payload)
+            self.assertEqual(r.status_code, OK,
+                             'Unable to call reference platform')
+
+            r = requests.get('{}/reference/service/stats'.format(
+                             reference_url), headers=headers)
+            self.assertEqual(r.status_code, OK,
+                             'Unable to call reference service')
+            initial_result = r.json()['invocations']
+            
+            time.sleep(pollinterval)
+            
+            r = requests.get('{}/reference/service/stats'.format(
+                             reference_url), headers=headers)
+            self.assertEqual(r.status_code, OK,
+                             'Unable to call reference service')
+            self.assertEqual(r.json()['invocations'], initial_result,
+                               'Platform Stats should not change from {} to {}'.format(
+                                    initial_result, r.json()['invocations']))
+
+        except requests.ConnectionError:
+            self.fail("Could not connect to host!")
+
+    def test_platform_stats(self):
+        ''' Test platform stats can be updated'''
+        
+        try:
+            r = requests.get('{}/reference/platform/stats'.format(
+                             reference_url), headers=headers)
+            self.assertEqual(r.status_code, OK,
+                             'Unable to call reference platform')
+            initial_results = r.json()
+            
+            payload = {'action': 'stop'}
+            r = requests.post('{}/reference/platform/update'.format(
+                              reference_url),
+                              headers=headers, data=payload)
+            self.assertEqual(r.status_code, OK,
+                             'Unable to call reference platform')
+            
+            r = requests.get('{}/reference/platform/stats'.format(
+                             reference_url), headers=headers)
+            self.assertEqual(r.status_code, OK,
+                             'Unable to call reference platform')
+            self.assertEqual(int(r.json()['interactions']) - int(initial_results['interactions']), 1,
+                               'Platform Stats should have incremented 1. Initial value: {}, current: {}'.format(
+                                    initial_results['interactions'], r.json()['interactions']))
+            self.assertEqual(r.json()['lastReset'], initial_results['lastReset'],
+                               'Platform Stats should have same reset time. Initial value: {}, current: {}'.format(
+                                    initial_results['lastReset'], r.json()['lastReset']))
+            
+            payload = {'action': 'start'}
+            r = requests.post('{}/reference/platform/update'.format(
+                              reference_url),
+                              headers=headers, data=payload)
+            self.assertEqual(r.status_code, OK,
+                             'Unable to call reference platform')
+            
+            r = requests.get('{}/reference/platform/stats'.format(
+                             reference_url), headers=headers)
+            self.assertEqual(r.status_code, OK,
+                             'Unable to call reference platform')
+            self.assertEqual(int(r.json()['interactions']) - int(initial_results['interactions']), 2,
+                               'Platform Stats should have incremented 2. Initial value: {}, current: {}'.format(
+                                    initial_results['interactions'], r.json()['interactions']))
+            self.assertEqual(r.json()['lastReset'], initial_results['lastReset'],
+                               'Platform Stats should have same reset time. Initial value: {}, current: {}'.format(
+                                    initial_results['lastReset'], r.json()['lastReset']))
+        
+        except requests.ConnectionError:
+            self.fail("Could not connect to host!")
+            
+    def test_platform_stats_reset(self):
+        ''' Test platform stats can be reset'''
+        
+        try:
+            r = requests.get('{}/reference/platform/stats'.format(
+                             reference_url), headers=headers)
+            self.assertEqual(r.status_code, OK,
+                             'Unable to call reference platform')
+            initial_results = r.json()
+            
+            time.sleep(2)
+            
+            payload = {'action': 'reset'}
+            r = requests.post('{}/reference/platform/update'.format(
+                              reference_url),
+                              headers=headers, data=payload)
+            self.assertEqual(r.status_code, OK,
+                             'Unable to call reference platform')
+            
+            r = requests.get('{}/reference/platform/stats'.format(
+                             reference_url), headers=headers)
+            self.assertEqual(r.status_code, OK,
+                             'Unable to call reference platform')
+            self.assertEqual(r.json()['interactions'], '0',
+                               'Platform Stats interactions should be 0. Initial value: {}, current: {}'.format(
+                                    initial_results['interactions'], r.json()['interactions']))
+            self.assertNotEqual(r.json()['lastReset'], initial_results['lastReset'],
+                               'Platform Stats should not have same reset time. Initial value: {}, current: {}'.format(
+                                    initial_results['lastReset'], r.json()['lastReset']))
+            
         except requests.ConnectionError:
             self.fail("Could not connect to host!")
