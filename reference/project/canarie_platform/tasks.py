@@ -89,8 +89,7 @@ def call_service(name):
             next_id = call_service.apply_async(args=[name], countdown=interval)
             update_task_id(name, next_id)
         else:
-            log.info('Not running just finish (current expected task is is not'
-                     ' this tasks id)')
+            log.info('Stopping task (saved task is not this task)')
             remove_poll(name)
     except Exception as e:
         log.error('An error occured. Stopping poll: {0}'.format(e))
