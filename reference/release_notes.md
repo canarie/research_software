@@ -10,7 +10,7 @@ Version: 3.0
 
 Changes since last release:
 
-* Added support for the NEP-RPI platform API version 2
+* This application now implements a reference platform as well as the reference service.
 
 Known Issues:
 
