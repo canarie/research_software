@@ -40,7 +40,7 @@ from httplib import OK
 
 reference_url = 'http://localhost:8000'
 headers = {'accept': 'application/json'}
-pollinterval = 10
+pollinterval = 10 #The default maximum polling interval in seconds
 
 class ReferenceIntegration(unittest.TestCase):
     def test_call_reference_service(self):
