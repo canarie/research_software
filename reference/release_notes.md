@@ -1,4 +1,4 @@
-# CANARIE reference service release notes
+# CANARIE reference software release notes
 
 ***
 

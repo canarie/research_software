@@ -1,8 +1,7 @@
-# CANARIE Research Service Monitoring API
+# CANARIE Research Software Monitoring API
 
-This is a simple reference service for the CANARIE Research Service Monitoring API.
+This is a simple reference application for the CANARIE Research Software Monitoring API.
 
-Please see ReferenceServiceDesignNote.docx for more information regarding 
-installation and configuration.
+Please see ReferenceServiceAndPlatformDesignNote.docx for more information regarding installation and configuration.
 
-The specification for [this API](https://collaboration.canarie.ca/elgg/file/view/849/research-service-support-for-the-canarie-registry-and-monitoring-system) is available from the CANARIE Collaboration website.
+The specification for the APIs for Platforms and Services are available from [the CANARIE Collaboration website](https://collaboration.canarie.ca/elgg/file/group/62/all#792).
