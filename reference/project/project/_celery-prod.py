@@ -31,26 +31,20 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-
 from __future__ import absolute_import
 
 import os
-
 from celery import Celery
-
 from django.conf import settings
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
-
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings-prod')
 app = Celery('project')
-
 app.config_from_object('django.conf:settings')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 app.conf.update(
     CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend',
 )
-
 
 @app.task(bind=True)
 def debug_task(self):

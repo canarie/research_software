@@ -40,7 +40,6 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -69,6 +68,9 @@ ALLOWED_HOSTS = ['*']
 BROKER_URL = 'django://'
 CELERY_RESULT_BACKEND = ('djcelery.backends.database:DatabaseBackend',)
 
+import djcelery
+djcelery.setup_loader()
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -81,6 +83,8 @@ INSTALLED_APPS = (
     'canarie_service',
     'canarie_platform',
     'rest_framework',
+    'djcelery',
+    'kombu.transport.django',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -125,6 +129,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/media/volume1/srv/www/research_software/reference/project/static/'
+
 
 LOGGING = {
     'version': 1,

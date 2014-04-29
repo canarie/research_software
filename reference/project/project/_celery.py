@@ -1,14 +1,14 @@
 """
-Copyright 2013 - CANARIE Inc. All rights reserved
+Copyright 2014 - CANARIE Inc. All rights reserved
 
-Synopsis: Production WSGI config for project on test server
+Synopsis: Configuration for celery (http://www.celeryproject.org/)
 
 Blob Hash: $Id$
 
 -------------------------------------------------------------------------------
 
-Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice,
    this list of conditions and the following disclaimer.
@@ -31,38 +31,21 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-
-"""
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
-"""
+from __future__ import absolute_import
 
 import os
-import sys
-import site
+from celery import Celery
+from django.conf import settings
 
-site.addsitedir('/media/volume1/venv/ENV/lib/python2.7/site-packages')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
+app = Celery('project')
+app.config_from_object('django.conf:settings')
+app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
-sys.path.append('/media/volume1/srv/www/reference/project')
-sys.path.append('/media/volume1/srv/www/reference/project/project')
+app.conf.update(
+    CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend',
+)
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings-prod")
-
-activate_env = os.path.expanduser('/media/volume1/venv/ENV/bin'
-                                  '/activate_this.py')
-execfile(activate_env, dict(__file__=activate_env))
-
-import djcelery
-djcelery.setup_loader()
-
-import celery.app
-import importlib
-
-celery_app = celery.app.app_or_default()
-
-# The Celery config needs to be imported before it can be used with config_from_object().
-importlib.import_module('project._celery-prod')
-celery_app.config_from_object("project._celery-prod")
-
-import django.core.handlers.wsgi
-application = django.core.handlers.wsgi.WSGIHandler()
+@app.task(bind=True)
+def debug_task(self):
+    print('Request: {0!r}'.format(self.request))

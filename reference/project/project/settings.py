@@ -126,6 +126,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/media/volume1/srv/www/research_software/reference/project/static'
 
 LOGGING = {
     'version': 1,
