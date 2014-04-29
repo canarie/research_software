@@ -51,7 +51,7 @@ rm db.sqlite3
 # Recreate db from initial_data.json
 ./manage.py syncdb --noinput &> /dev/null
 
-celery -q -A project worker -l info --statedb=./celery.worker.state &> /dev/null &
+celery -q -A project worker --app=project._celery:app -l info --statedb=./celery.worker.state &> /dev/null &
 
 
 CELERY_PID=$!
