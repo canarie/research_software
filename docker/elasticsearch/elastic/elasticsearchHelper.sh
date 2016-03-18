@@ -3,6 +3,8 @@
 # Copyright 2016 - CANARIE Inc. All rights reserved
 #
 # Synopsis: Integration helper script used to drive elastic search server.
+# This is not used by the container but left in the repository to provide another
+# option for managing elasticsearch instances outside of a container.
 #
 # Blob Hash: $Id$
 #
