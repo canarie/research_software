@@ -34,7 +34,7 @@
 #
 
 FROM centos:6.6
-MAINTAINER "rob.young@canarie.ca"
+MAINTAINER "software@canarie.ca"
 
 # When creating the container, the following
 # RUN commands will be run in order to build it up
