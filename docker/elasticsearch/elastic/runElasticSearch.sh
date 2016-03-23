@@ -40,7 +40,6 @@ NODE_NAME=dev
 CLUSTER_NAME=rsdev
 CLUSTER_HTTP_PORT=80
 CLUSTER_TRANSPORT_PORT=9301
-SERVER_TYPE=DEV
 
 ${ELASTIC_PATH}/elasticsearch  \
 	-p ${PID_FILE} --index.store.type=memory \
