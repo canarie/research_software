@@ -1,7 +1,7 @@
 # Dockerized elasticsearch demo
 
 ## Overview
-This Docker image contains a demo version of Elasticsearch mentioned in the
+This Docker image contains a demo version of Elasticsearch mentioned in the forthcoming
 CANARIE white paper "Getting started with Elasticsearch".  This container is intended to demonstrate how Elasticsearch can be configured for a development/testing environment using in-memory storage.  This container includes the elasticsearch head plugin ( https://mobz.github.io/elasticsearch-head/ ) for ease of debugging.  
 
 For a more complex elasticsearch container, see https://hub.docker.com/_/elasticsearch/
