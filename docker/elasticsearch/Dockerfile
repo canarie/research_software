@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Copyright 2016 - CANARIE Inc. All rights reserved
 #
 # Synopsis: Demo elasticsearch container using in memory storage
