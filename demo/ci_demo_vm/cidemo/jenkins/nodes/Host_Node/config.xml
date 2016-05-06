@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<slave>
+  <name>Host_Node</name>
+  <description></description>
+  <remoteFS>/home/vagrant/host_node</remoteFS>
+  <numExecutors>4</numExecutors>
+  <mode>EXCLUSIVE</mode>
+  <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+  <launcher class="hudson.slaves.JNLPLauncher"/>
+  <label>vagrant_executor</label>
+  <nodeProperties/>
+  <userId>anonymous</userId>
+</slave>
