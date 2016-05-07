@@ -40,11 +40,14 @@ chown -R vagrant:vagrant /home/vagrant/jenkins
 echo "Install jenkins container"
 docker run -d -p 8080:8080 -p 50000:50000 --name jenkins --restart always -v /home/vagrant/jenkins:/var/jenkins_home jenkins || echo "Could not create Jenkins CI!"
 
-sudo yum -y install java-1.8.0-openjdk wget
+sudo yum -y install java-1.8.0-openjdk wget curl
 
 # TODO install java jar correctly
 # could use https://github.com/jwilder/dockerize here
-sleep 10
+until $(curl --output /dev/null --silent --head --fail http://localhost:8080); do
+    printf '.'
+    sleep 5
+done
 wget -O /home/vagrant/slave.jar http://localhost:8080/jnlpJars/slave.jar
 java -jar /home/vagrant/slave.jar -jnlpUrl http://localhost:8080/computer/Host_Node/slave-agent.jnlp > /dev/null &
 
