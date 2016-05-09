@@ -1,7 +1,9 @@
 #!/bin/bash
 #
-#  Copyright 2014 - CANARIE Inc. All rights reserved
+#  Copyright 2016 - CANARIE Inc. All rights reserved
 #
+#  Synopsis: Creates the jenkins server by instantiating a local jenkins
+#  docker instance.
 #
 #  -------------------------------------------------------------------------------
 #
@@ -34,10 +36,14 @@
 #  POSSIBILITY OF SUCH DAMAGE.
 
 
+# There is a preconfigured jenkins folder under /vagrant/cidemo/jenkins.  The
+# first step is to copy it over to a local directory and fix any permissions
+# issues.
+
 cp -rv /vagrant/cidemo/jenkins /home/vagrant/jenkins
 chown -R vagrant:vagrant /home/vagrant/jenkins
 
+# Run the jenkins container using the jenkins configuration stored under
+# /home/vagrant/jenkins
 echo "Install jenkins container"
 docker run -d -p 8080:8080 -p 50000:50000 --name jenkins --restart always -v /home/vagrant/jenkins:/var/jenkins_home jenkins || echo "Could not create Jenkins CI!"
-
-sudo yum -y install java-1.8.0-openjdk wget curl

@@ -8,11 +8,6 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # All Vagrant configuration is done here. The most common configuration
-  # options are documented and commented below. For a complete reference,
-  # please see the online documentation at vagrantup.com.
-
-  # Every Vagrant virtual environment requires a box to build off of.
   config.vm.define "cidemo" do |cidemo|
     #Setup the VM virtualbox setting
     cidemo.vm.provider "virtualbox" do |v|
@@ -20,11 +15,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
     end
 
-    #testmachine.vm.box = "hashicorp/precise32"
     cidemo.vm.box = "centos/7"
-    # base.vm.hostname = "canarie-base"
+    cidemo.vm.hostname = "cidemo"
+    
     #setup forword port for local host use
-    #base.vm.network "forwarded_port", guest: 80, host: 18080
+    #note: consider using private network instead so VM is accessible from
+    #host machine.  https://www.vagrantup.com/docs/networking/private_network.html
     cidemo.vm.network "forwarded_port", guest: 8080, host: 18080
     cidemo.vm.network "forwarded_port", guest: 4444, host: 14444
     cidemo.vm.provision "shell", path: "cidemo/scripts/provision.sh"

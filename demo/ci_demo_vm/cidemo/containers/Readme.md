@@ -1,1 +1,1 @@
-This directory contains a number of docker images for use in this demo.
+This directory contains a number of docker images for use in this demo.  When the VM is provisioned with Vagrant (i.e. vagrant up cidemo), the docker image in each directory will be built and pushed to the local docker repository running on port 5000.

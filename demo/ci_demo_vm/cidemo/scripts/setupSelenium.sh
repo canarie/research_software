@@ -1,7 +1,9 @@
 #!/bin/bash
 #
-#  Copyright 2014 - CANARIE Inc. All rights reserved
+#  Copyright 2016 - CANARIE Inc. All rights reserved
 #
+#  Synopsis: Run a selenium hub container, and two selenium nodes, one firefox,
+#  one chrome.
 #
 #  -------------------------------------------------------------------------------
 #
