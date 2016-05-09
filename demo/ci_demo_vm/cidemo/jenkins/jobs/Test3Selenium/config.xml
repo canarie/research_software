@@ -16,10 +16,14 @@
     <hudson.tasks.Shell>
       <command>cp -rv /vagrant/cidemo/containers/test3selenium/* ${WORKSPACE}
 
-docker build -t canarie/test3 .
+APACHE_ID=`docker run -d canarie/appserver`
+TEST_STATUS=0
+docker run --rm=true --link seleniumhub:seleniumhub --link ${APACHE_ID}:web -v ${WORKSPACE}:/workspace localhost:5000/canarie/test3selenium || TEST_STATUS=1
 
-docker run --rm=true --link seleniumhub:seleniumhub -v ${WORKSPACE}:/workspace canarie/test3
-</command>
+docker stop $APACHE_ID
+docker rm $APACHE_ID
+
+exit $TEST_STATUS</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>

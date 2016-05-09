@@ -7,6 +7,8 @@ import unittest
 
 NODE_ADDRESS = 'http://' + os.environ['SELENIUMHUB_PORT_4444_TCP_ADDR'] + ":" + str(os.environ['SELENIUMHUB_PORT_4444_TCP_PORT']) + '/wd/hub'
 
+APP_ADDRESS='http://' + os.environ['WEB_PORT_80_TCP_ADDR'] + ":" + str(os.environ['WEB_PORT_80_TCP_PORT'])
+
 class AdminWebpage(unittest.TestCase):
 	def setUp(self):
 		# NOTE
@@ -25,6 +27,14 @@ class AdminWebpage(unittest.TestCase):
 		print("tearing down driver")
 		self.driver.close()
 
-	def testFindZiggy(self):
-		self.driver.get("https://www.google.ca")
-		assert "Google" in self.driver.title
+	def testIndexExists(self):
+		self.driver.get(APP_ADDRESS + "/index.html")
+		assert "Index" in self.driver.title
+
+	def testAExists(self):
+		self.driver.get(APP_ADDRESS + "/a.html")
+		assert "A" in self.driver.title
+
+	def testBExists(self):
+		self.driver.get(APP_ADDRESS + "/b.html")
+		assert "B" in self.driver.title

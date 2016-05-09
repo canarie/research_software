@@ -14,11 +14,8 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>cp /vagrant/cidemo/containers/test1/* ${WORKSPACE}
-
-docker build -t canarie/test1 .
-
-docker run -t canarie/test1</command>
+      <command># run test 1 via local docker registry
+docker run -t localhost:5000/canarie/test1</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>

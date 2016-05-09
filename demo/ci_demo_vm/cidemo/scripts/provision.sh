@@ -54,5 +54,6 @@ sudo chkconfig docker on
 /vagrant/cidemo/scripts/setupSelenium.sh
 /vagrant/cidemo/scripts/setupRegistry.sh
 /vagrant/cidemo/scripts/buildContainers.sh
+/vagrant/cidemo/scripts/setupJenkinsSlave.sh
 
 echo "COMPLETE!"
