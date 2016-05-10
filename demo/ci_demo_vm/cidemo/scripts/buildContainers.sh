@@ -47,7 +47,7 @@ do
 	docker build -t "${CONTAINER_NAME}" $D
 
 	echo "Tagging ${CONTAINER_NAME}"
-	docker tag "${CONTAINER_NAME}" /"${CONTAINER_NAME}"
+	docker tag "${CONTAINER_NAME}" ${LOCAL_REGISTRY}/"${CONTAINER_NAME}"
 
 	echo "Pushing ${CONTAINER_NAME} to ${LOCAL_REGISTRY}"
 	docker push ${LOCAL_REGISTRY}/"${CONTAINER_NAME}"
