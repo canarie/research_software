@@ -36,6 +36,7 @@
 
 sudo yum update
 
+# Install docker and start the process
 sudo tee /etc/yum.repos.d/docker.repo <<-'EOF'
 [dockerrepo]
 name=Docker Repository
@@ -50,6 +51,7 @@ sudo service docker start
 sudo usermod -aG docker vagrant
 sudo chkconfig docker on
 
+# Run provisioning scripts
 /vagrant/cidemo/scripts/setupJenkins.sh
 /vagrant/cidemo/scripts/setupSelenium.sh
 /vagrant/cidemo/scripts/setupRegistry.sh
