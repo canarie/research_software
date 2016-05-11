@@ -9,7 +9,7 @@ NODE_ADDRESS = 'http://' + os.environ['SELENIUMHUB_PORT_4444_TCP_ADDR'] + ":" + 
 
 APP_ADDRESS='http://' + os.environ['WEB_PORT_80_TCP_ADDR'] + ":" + str(os.environ['WEB_PORT_80_TCP_PORT'])
 
-class AdminWebpage(unittest.TestCase):
+class WebpageTest(unittest.TestCase):
 	def setUp(self):
 		# NOTE
 		# Setting a driver every test like this is not ideal for a bunch of

@@ -1,5 +1,8 @@
 FROM python:2.7
 
-ADD test.py /main/
+RUN pip install nose
 
-CMD python /main/test.py
+COPY scripts/ /scripts
+RUN chmod u+x /scripts/run.sh
+
+CMD /scripts/run.sh

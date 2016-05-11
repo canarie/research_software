@@ -3,7 +3,17 @@
   <actions/>
   <description></description>
   <keepDependencies>false</keepDependencies>
-  <properties/>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.BooleanParameterDefinition>
+          <name>BREAK_BUILD</name>
+          <description>Testing parameter, enable to break the build!</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
   <scm class="hudson.scm.NullSCM"/>
   <assignedNode>vagrant_executor</assignedNode>
   <canRoam>false</canRoam>
@@ -15,9 +25,17 @@
   <builders>
     <hudson.tasks.Shell>
       <command># run test 1 via local docker registry
-docker run -t localhost:5000/canarie/test1</command>
+docker pull localhost:5000/canarie/test1
+docker run -v ${WORKSPACE}:/workspace -e BREAK_BUILD=${BREAK_BUILD} -t localhost:5000/canarie/test1</command>
     </hudson.tasks.Shell>
   </builders>
-  <publishers/>
+  <publishers>
+    <hudson.tasks.junit.JUnitResultArchiver plugin="junit@1.2-beta-4">
+      <testResults>result.xml</testResults>
+      <keepLongStdio>false</keepLongStdio>
+      <testDataPublishers/>
+      <healthScaleFactor>1.0</healthScaleFactor>
+    </hudson.tasks.junit.JUnitResultArchiver>
+  </publishers>
   <buildWrappers/>
 </project>
