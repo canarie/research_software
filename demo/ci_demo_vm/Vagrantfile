@@ -17,12 +17,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     cidemo.vm.box = "centos/7"
     cidemo.vm.hostname = "cidemo"
-    
+
     #setup forword port for local host use
     #note: consider using private network instead so VM is accessible from
     #host machine.  https://www.vagrantup.com/docs/networking/private_network.html
     cidemo.vm.network "forwarded_port", guest: 8080, host: 18080
     cidemo.vm.network "forwarded_port", guest: 4444, host: 14444
+    cidemo.vm.synced_folder '.', '/vagrant'
     cidemo.vm.provision "shell", path: "cidemo/scripts/provision.sh"
   end
 end
