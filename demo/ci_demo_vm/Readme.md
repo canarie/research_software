@@ -13,7 +13,7 @@ To run, execute the following from this directory (the directory containing the 
 	open http://localhost:18080
 
 ## VM Architecture
-![cidemo VM architecture diagram](VM_architecture.png)
+![cidemo VM architecture diagram](./VM_architecture.png)
 
 ## Required Software
 The following software packages are needed to run this project:
