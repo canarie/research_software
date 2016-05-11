@@ -35,7 +35,9 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 
+# Note, if you have recently upgraded vagrant you may need to perform the operations
+# described on this page to get plugins to install
+# https://github.com/mitchellh/vagrant/issues/4918#issuecomment-66413503
 vagrant plugin install vagrant-hostmanager
 vagrant plugin install vagrant-vbguest
 vagrant plugin install vagrant-share
-vagrant plugin install vagrant-login

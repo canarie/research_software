@@ -11,3 +11,12 @@ To run, execute the following from this directory (the directory containing the 
 	vagrant up cidemo
 
 	open http://localhost:18080
+
+## VM Architecture
+![cidemo VM architecture diagram](VM_architecture.png)
+
+## Required Software
+The following software packages are needed to run this project:
+
+* [Vagrant 1.8.1](https://www.vagrantup.com/downloads.html)
+* [Virtualbox](https://www.virtualbox.org/wiki/Downloads)
