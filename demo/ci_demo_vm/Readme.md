@@ -12,6 +12,10 @@ To run, execute the following from this directory (the directory containing the 
 
 	open http://localhost:18080
 
+To remove the VM, run the following from the command line.
+
+	vagrant destroy cidemo
+
 ## VM Architecture
 ![cidemo VM architecture diagram](./VM_architecture.png)
 
