@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description></description>
+  <description>This test demonstrates a simple container based test.  The test is run in a container, checking the python version (2.7) and a secondary check that passes or fails based on the build parameter BREAK_BUILD.  Test results are published to jenkins via a nUnit XML file.</description>
   <keepDependencies>false</keepDependencies>
   <properties>
     <hudson.model.ParametersDefinitionProperty>
