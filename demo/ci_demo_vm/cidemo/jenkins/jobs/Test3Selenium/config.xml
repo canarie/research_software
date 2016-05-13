@@ -3,7 +3,22 @@
   <actions/>
   <description></description>
   <keepDependencies>false</keepDependencies>
-  <properties/>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>APP_SERVER</name>
+          <description>Determines which application server is used for the test.  App server will pass the test, while brokenappserver demonstrates an app server that will fail the tests.</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>appserver</string>
+              <string>brokenappserver</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
   <scm class="hudson.scm.NullSCM"/>
   <assignedNode>vagrant_executor</assignedNode>
   <canRoam>false</canRoam>
@@ -14,7 +29,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>APACHE_ID=`docker run -d canarie/appserver`
+      <command>APACHE_ID=`docker run -d canarie/${APP_SERVER}`
 TEST_STATUS=0
 docker run --rm=true --link seleniumhub:seleniumhub --link ${APACHE_ID}:web -v ${WORKSPACE}:/workspace localhost:5000/canarie/test3selenium || TEST_STATUS=1
 
