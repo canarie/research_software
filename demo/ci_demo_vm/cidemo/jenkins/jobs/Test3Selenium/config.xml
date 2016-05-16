@@ -29,9 +29,12 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>APACHE_ID=`docker run -d canarie/${APP_SERVER}`
+      <command># clean up old workspace screenshots
+rm ${WORKSPACE}/*.png || echo &quot;No screenshots to remove&quot;
+
+APACHE_ID=`docker run -d canarie/${APP_SERVER}`
 TEST_STATUS=0
-docker run --rm=true --link seleniumhub:seleniumhub --link ${APACHE_ID}:web -v ${WORKSPACE}:/workspace localhost:5000/canarie/test3selenium || TEST_STATUS=1
+docker run --rm=true -u 1000 --link seleniumhub:seleniumhub --link ${APACHE_ID}:web -v ${WORKSPACE}:/workspace localhost:5000/canarie/test3selenium || TEST_STATUS=1
 
 docker stop $APACHE_ID
 docker rm $APACHE_ID
@@ -40,6 +43,14 @@ exit $TEST_STATUS</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>*.png</artifacts>
+      <allowEmptyArchive>true</allowEmptyArchive>
+      <onlyIfSuccessful>false</onlyIfSuccessful>
+      <fingerprint>false</fingerprint>
+      <defaultExcludes>true</defaultExcludes>
+      <caseSensitive>true</caseSensitive>
+    </hudson.tasks.ArtifactArchiver>
     <hudson.tasks.junit.JUnitResultArchiver plugin="junit@1.2-beta-4">
       <testResults>result_webtest.xml</testResults>
       <keepLongStdio>false</keepLongStdio>

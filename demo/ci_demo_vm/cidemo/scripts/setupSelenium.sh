@@ -36,5 +36,5 @@
 #  POSSIBILITY OF SUCH DAMAGE.
 
 docker run -d -p 4444:4444 --name seleniumhub --restart always selenium/hub
-docker run -d --name chrome1 --link seleniumhub:hub selenium/node-chrome
-docker run -d --name firefox1 --link seleniumhub:hub selenium/node-firefox
+docker run -d --name chrome1 --restart always --link seleniumhub:hub selenium/node-chrome
+docker run -d --name firefox1 --restart always --link seleniumhub:hub selenium/node-firefox

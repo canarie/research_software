@@ -2,7 +2,7 @@
 #
 #  Copyright 2016 - CANARIE Inc. All rights reserved
 #
-#  Synopsis: Provisioning script for testing machine
+#  Synopsis: Main Vagrant provisioning script for cidemo virtual machine
 #
 #  -------------------------------------------------------------------------------
 #

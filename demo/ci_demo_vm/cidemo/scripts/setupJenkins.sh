@@ -43,6 +43,12 @@
 cp -rv /vagrant/cidemo/jenkins /home/vagrant/jenkins
 chown -R vagrant:vagrant /home/vagrant/jenkins
 
+# Create the Test3Selenium directory and set the uid for this directory
+mkdir /home/vagrant/host_node
+mkdir /home/vagrant/host_node/workspace
+mkdir /home/vagrant/host_node/workspace/Test3Selenium
+chown -R vagrant:vagrant /home/vagrant/host_node/workspace/Test3Selenium
+
 # Run the jenkins container using the jenkins configuration stored under
 # /home/vagrant/jenkins
 echo "Install jenkins container"

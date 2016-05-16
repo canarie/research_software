@@ -10,23 +10,30 @@ NODE_ADDRESS = 'http://' + os.environ['SELENIUMHUB_PORT_4444_TCP_ADDR'] + ":" + 
 APP_ADDRESS='http://' + os.environ['WEB_PORT_80_TCP_ADDR'] + ":" + str(os.environ['WEB_PORT_80_TCP_PORT'])
 
 class WebpageTest(unittest.TestCase):
-	def setUp(self):
-		# NOTE
-		# Setting a driver every test like this is not ideal for a bunch of
-		# tests, this is for demonstrative purposes only.  A better solution
-		# would probably be to reuse the browser for a suite of tests,
-		# or create a new container with browser for each test.
-		print("setting up driver")
-		self.driver = webdriver.Remote(
+	@classmethod
+	def setUpClass(cls):
+		print("Set up class")
+		cls.driver = webdriver.Remote(
 			command_executor=NODE_ADDRESS,
 			desired_capabilities=DesiredCapabilities.FIREFOX
 		)
-		print("Remote to " + NODE_ADDRESS + " acquired")
+
+	@classmethod
+	def tearDownClass(cls):
+		print("Tear down class")
+		cls.driver.close()
 
 	def tearDown(self):
-		print("tearing down driver")
-		self.driver.close()
+		print("Tear down")
+		# If an error has occurred, take a screen capture of the browser state
+		for method, error in self._outcome.errors:
+			if error:
+				screenshot_name = '/workspace/failed-{}.png'.format(str(method).split()[0])
+				print("Saving screen shot to {}".format(screenshot_name))
+				self.driver.save_screenshot(screenshot_name)
 
+	##############################################
+	# All tests defined below this point
 	def testIndexExists(self):
 		self.driver.get(APP_ADDRESS + "/index.html")
 		assert "Index" in self.driver.title

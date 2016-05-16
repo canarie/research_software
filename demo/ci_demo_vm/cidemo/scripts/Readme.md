@@ -1,6 +1,7 @@
 # Provisioning Scripts
 
-This directory contains all of the scripts used in provisioning the cidemo VM.  Bash scripting was chosen as the provisioning language for ease of reading.
+This directory contains all of the scripts used in provisioning the Vagrant based
+cidemo VM.  Bash scripting was chosen as the provisioning language for ease of reading.
 
 ## provision.sh
 Main provisioning script which bootstraps the process.
