@@ -47,7 +47,7 @@ chown -R vagrant:vagrant /home/vagrant/jenkins
 mkdir /home/vagrant/host_node
 mkdir /home/vagrant/host_node/workspace
 mkdir /home/vagrant/host_node/workspace/Test3Selenium
-chown -R vagrant:vagrant /home/vagrant/host_node/workspace/Test3Selenium
+chown -R vagrant:vagrant /home/vagrant/host_node
 
 # Run the jenkins container using the jenkins configuration stored under
 # /home/vagrant/jenkins

@@ -39,4 +39,8 @@ sudo yum -y install java-1.8.0-openjdk wget curl
 
 echo "Setting up jenkins slave node"
 wget -O /home/vagrant/slave.jar http://localhost:8080/jnlpJars/slave.jar
-java -jar /home/vagrant/slave.jar -jnlpUrl http://localhost:8080/computer/Host_Node/slave-agent.jnlp > /dev/null &
+
+cp -v /vagrant/cidemo/scripts/config/hostnoded /etc/init.d/
+cp -v /vagrant/cidemo/scripts/config/*slave.sh /home/vagrant/host_node/
+
+sudo /etc/init.d/hostnoded start
