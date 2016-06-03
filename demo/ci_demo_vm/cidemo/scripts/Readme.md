@@ -19,4 +19,5 @@ Sets up a local docker registry.
 Builds each container image under the directory cidemo/containers and pushes them to the local registry.
 
 ## setupJenkinsSlave.sh
-Creates a Jenkins slave node on the host VM.
+Creates a Jenkins slave node on the host VM.  Uses systemd to install this process
+as a service.

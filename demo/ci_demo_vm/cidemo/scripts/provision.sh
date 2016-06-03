@@ -34,7 +34,14 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 
-sudo yum update
+
+# If the system is already provisioned, don't run provisioning again
+if [ -f /home/vagrant/provisioned ]; then
+    echo "System is already provisioned"
+    exit
+fi
+
+sudo yum update -y
 
 # Install docker and start the process
 sudo tee /etc/yum.repos.d/docker.repo <<-'EOF'
@@ -57,5 +64,8 @@ sudo chkconfig docker on
 /vagrant/cidemo/scripts/setupRegistry.sh
 /vagrant/cidemo/scripts/buildContainers.sh
 /vagrant/cidemo/scripts/setupJenkinsSlave.sh
+
+# create a file to indicate the machine is provisioned
+touch /home/vagrant/provisioned
 
 echo "COMPLETE!"

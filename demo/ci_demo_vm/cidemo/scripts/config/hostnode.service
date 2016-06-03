@@ -1,0 +1,14 @@
+
+[Unit]
+Description=Jenkins Slave
+Wants=network.target
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/usr/bin/java -jar /home/vagrant/slave.jar -jnlpUrl http://localhost:8080/computer/Host_Node/slave-agent.jnlp
+User=vagrant
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
