@@ -77,7 +77,7 @@ log = logging.getLogger(__name__)
 template = 'canarie_service/'
 
 DOC_URL = ('https://github.com/canarie/research_software/blob/master/reference'
-           '/ReferenceServiceAndPlatformDesignNote.docx')
+           '/ReferenceServiceAndPlatformDesignNote.md')
 RELEASE_NOTES_URL = ('https://github.com/canarie/research_software/blob/master'
                      '/reference/release_notes.md')
 SOURCE_URL = ('https://github.com/canarie/research_software/tree/master'

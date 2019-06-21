@@ -35,9 +35,9 @@
 #ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-django==2.1.7
-djangorestframework==3.9.2
+django
+djangorestframework
 django-nose==1.4.6
 celery==3.1.25
 django-celery==3.3.0
-requests==2.21.0
+requests
