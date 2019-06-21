@@ -32,18 +32,20 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from canarie_service import views
 
-urlpatterns = patterns('',
+app_name = 'canarie_service'
+
+urlpatterns = [
   url(r'^info$', views.info, name='info'),
   url(r'^stats$', views.stats, name='stats'),
   url(r'^doc$', views.doc, name='doc'),
   url(r'^releasenotes$', views.release_notes, name='releasenotes'),
   url(r'^support$', views.support, name='support'),
   url(r'^source$', views.source, name='source'),
-  url(r'^tryme$', views.tryme, name='tryme'),
+  url(r'^tryme$', views.app, name='tryme'),
   url(r'^licence$', views.licence, name='licence'),
   url(r'^provenance$', views.provenance, name='provenance'),
   url(r'^app$', views.app, name='app'),
@@ -51,4 +53,4 @@ urlpatterns = patterns('',
   url(r'^reset$', views.reset, name='reset'),
   url(r'^add$', views.add, name='add'),
   url(r'^setinfo$', views.setinfo, name='setinfo'),
-)
+]

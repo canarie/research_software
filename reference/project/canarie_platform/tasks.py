@@ -34,7 +34,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 import logging
 import random
-from httplib import OK
+from http.client import OK
 
 import requests
 from requests.exceptions import RequestException

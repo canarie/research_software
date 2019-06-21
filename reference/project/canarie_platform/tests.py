@@ -31,10 +31,11 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-from StringIO import StringIO
+#from io import StringIO
+import io
 
 import datetime
-from httplib import BAD_REQUEST
+from http.client import BAD_REQUEST
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.test import TestCase
@@ -49,11 +50,11 @@ from canarie_platform.models import Info, Statistic
 from canarie_platform.defaults import stats
 
 from util.shared import validate_info_json, NAME, STATS_NAME
-import defaults
+from . import defaults
 
 
 def get_as_json(text):
-    return JSONParser().parse(StringIO(text))
+    return JSONParser().parse(io.BytesIO(text.encode()))
 
 USAGE_NAME = 'invocations'
 

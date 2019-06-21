@@ -35,9 +35,9 @@
 #ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-django==1.6
-djangorestframework==2.3.8
-django-nose==1.2
-celery==3.1.10
-django-celery==3.1.10
-requests==2.20.0
+django==2.1.7
+djangorestframework==3.9.2
+django-nose==1.4.6
+celery==3.1.25
+django-celery==3.3.0
+requests==2.21.0

@@ -38,10 +38,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 from datetime import datetime
 import logging
-from StringIO import StringIO
+import io
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render
@@ -74,7 +74,7 @@ from util.shared import (get_field, num, validate_info_json,
                          FIELD_NOT_SET_ERROR, TIME_FORMAT, STATS_NAME,
                          STATS_VALUE, JSON_CONTENT)
 
-import defaults
+from . import defaults
 
 log = logging.getLogger(__name__)
 
@@ -126,11 +126,6 @@ def support(request):
 def source(request):
     """ Return a HTML representation of the current source """
     return HttpResponseRedirect(get_configuration(SOURCE_URL).value)
-
-
-def tryme(request):
-    """ Redirect to the application """
-    return HttpResponseRedirect(reverse('canarie_platform:app'))
 
 
 def licence(request):
@@ -308,7 +303,7 @@ def reset_counter(invocations):
 @api_view(['PUT'])
 def setinfo(request):
     """ Set the info data """
-    stream = StringIO(request.body)
+    stream = io.BytesIO(request.body)
     data = JSONParser().parse(stream)
     try:
         validate_info_json(defaults.EXPECTED_VALUES, data)
@@ -388,7 +383,7 @@ def parse_info_json(data):
     info.support_email = get_field(data, SUPPORT_EMAIL_JSON)
     info.research_subject = get_field(data, RESEARCH_SUBJECT_JSON)
     if TAGS in data and data.get(TAGS) and not isinstance(data.get(TAGS),
-                                                          basestring):
+                                                          str):
         tags = data.get(TAGS)
         try:
             for index, tag in enumerate(tags):

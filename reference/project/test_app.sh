@@ -49,7 +49,10 @@ echo "=========="
 rm db.sqlite3
 
 # Recreate db from initial_data.json
-./manage.py syncdb --noinput &> /dev/null
+./manage.py makemigrations
+echo "makemigrations ... done."
+./manage.py migrate
+echo "migrate ... done."
 
 celery -q -A project worker --app=project._celery:app -l info --statedb=./celery.worker.state &> /dev/null &
 

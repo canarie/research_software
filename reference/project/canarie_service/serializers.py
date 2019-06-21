@@ -41,14 +41,14 @@ log = logging.getLogger(__name__)
 
 VALUE = 'usagename'
 
-class IntAsTextField(serializers.WritableField):
+class IntAsTextField(serializers.Field):
     """ Saves an Int value as a writeable field.
 
     """
-    def to_native(self, obj):
+    def to_internal_value(self, obj):
         return "{0}".format(obj)
 
-    def from_native(self, obj):
+    def to_representation(self, obj):
         return int(obj)
 
 class InfoSerializer(serializers.ModelSerializer):

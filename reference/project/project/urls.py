@@ -31,16 +31,16 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
     # Examples:
     # url(r'^$', 'demo_service.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
     url(r'^reference/service/', include('canarie_service.urls', namespace='canarie_service')),
     url(r'^reference/platform/', include('canarie_platform.urls', namespace='canarie_platform')),
-    url(r'^admin/', include(admin.site.urls)),
-)
+    url(r'^admin/', admin.site.urls),
+]

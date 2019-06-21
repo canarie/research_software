@@ -32,8 +32,6 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
-import exceptions
-
 TEXT_FIELD_SIZE = 254
 
 TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
@@ -83,5 +81,5 @@ def num(s):
     """
     try:
         return int(s)
-    except exceptions.ValueError:
+    except ValueError:
         return float(s)

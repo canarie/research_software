@@ -36,7 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 import unittest
 import requests
 import time
-from httplib import OK
+from http.client import OK
 
 reference_url = 'http://localhost:8000'
 headers = {'accept': 'application/json'}
@@ -87,7 +87,7 @@ class ReferenceIntegration(unittest.TestCase):
                              .format(r.status_code, r.reason))
 
             self.assertEqual(r.json()['running'], True,
-                             'Should be running ' + r.content)
+                             'Should be running {0}'.format(r.content))
 
             time.sleep(pollinterval)
             r = requests.get('{}/reference/service/stats'.format(
@@ -204,7 +204,7 @@ class ReferenceIntegration(unittest.TestCase):
                              reference_url), headers=headers)
             self.assertEqual(r.status_code, OK,
                              'Unable to call reference platform')
-            self.assertEqual(r.json()['interactions'], '0',
+            self.assertEqual(r.json()['interactions'], 0,
                                'Platform Stats interactions should be 0. Initial value: {}, current: {}'.format(
                                     initial_results['interactions'], r.json()['interactions']))
             self.assertNotEqual(r.json()['lastReset'], initial_results['lastReset'],
